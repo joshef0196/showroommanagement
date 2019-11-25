@@ -1,0 +1,61 @@
+{% extends 'showroom/admin/base.html' %}
+{% block title %} My Panel {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1> Dashboard <small>Control panel</small> </h1>
+        <ol class="breadcrumb">
+            <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-red"><i class="fa fa-money"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Today Sale Amount</span>
+                        <span class="info-box-number" style="color:green;font-size:20px;">50000 tk</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix visible-sm-block"></div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="fa fa-usd"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Sale Amount</span>
+                        <span class="info-box-number">11000 Tk</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-yellow"><i class="fa fa-car"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Today Installment Product</span>
+                        <span class="info-box-number">2 Piece</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-blue"><i class="fa fa-car"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total Installment Product</span>
+                        <span class="info-box-number">11</span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix visible-sm-block"></div>
+        </div>
+    </section>
+</div>
+{% endblock %}

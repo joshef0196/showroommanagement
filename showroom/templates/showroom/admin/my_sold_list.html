@@ -1,0 +1,91 @@
+{% extends 'recycle/user/base.html' %}
+{% block title %} My Sold list {% endblock %}
+{% load staticfiles %}
+{% load data_load %}
+{% block contain %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            My Sold list Table
+        <small>in bdrecycle</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="/my-dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">My sold list</li>
+        </ol>
+    </section>
+    <section class="content">
+      	<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+                    <div class="row">
+			            <div class="col-md-4">
+                            <div class="box-header">
+                                <h3 class="box-title">My Sold List</h3>
+                            </div>
+                        </div>
+			            <div class="col-md-8 text-right">
+                            <div class="box-header">
+                                <a href="/my-dashboard/"><h3 class="box-title"><i class="fa fa-hand-o-right"></i> Go to Home Page</h3></a>
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="box-body" style="overflow-x:auto;">
+						<table id="example1" class="table table-bordered table-hover">
+							<thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Item Category</th>
+                                    <th>Item Name</th>
+                                    <th>Pick up Date</th>
+                                    <th>Pick up Time</th>
+                                    <th>My Area</th>
+                                    <th>Product For</th>
+                                    <th>Request Date</th>
+                                    <th>Completed Date</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for data in sold_list %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{data.category_name}}<spain style="font-size:12px;">( {{data.category_name.price_per_kg}} )</spain></td>
+                                        <td>{{data.item_name}}</td>
+                                        <td>{{data.pickup_date}}</td>
+                                        <td>{{data.pickup_time}}</td>
+                                        <td>{{data.area}}</td>
+                                        <td>{{data.get_product_for_display}}</td>
+                                        <td>{{data.request_date}}</td>
+                                        {% if data.completed_date %}
+                                            <td style="color:green;">{{data.completed_date|date:"M-d-Y"}}</td>
+                                        {% else %}
+                                            <td style="color:red;">Pending request</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+    	</div>
+	</section>
+</div>
+<script src="{% static 'recycle/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+{% endblock %}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %} {% endblock %} </title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" >
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/font-awesome/css/font-awesome.min.css' %}">
+    <!-- Ionicons -->
+    {% comment %} <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/Ionicons/css/ionicons.min.css' %}"> {% endcomment %}
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'showroom/admin/dist/css/AdminLTE.css' %}">
+    {% comment %} <link rel="stylesheet" href="{% static 'showroom/admin/dist/css/AdminLTE.min.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'showroom/admin/dist/css/skins/_all-skins.min.css' %}">
+    <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/morris.js/morris.css' %}">
+    <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/jvectormap/jquery-jvectormap.css' %}">
+    <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/bootstrap-daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'showroom/admin/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css' %}">
+    <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="shortcut icon" href="{% static 'showroom/admin/img/company_logo.png' %}">
+</head>
+<style>
+    .skin-blue .sidebar a:hover {
+        color: #fff !important;
+        background: #24414c !important;
+        border-color: #673AB7 !important;
+    }
+    .skin-blue .sidebar-menu >.skin-blue .sidebar-menu > li.active > a, .skin-blue .sidebar-menu > li.menu-open > a {
+        color: #fff;
+        background: #24414c !important;
+    }
+    .skin-blue .sidebar-menu > li > .treeview-menu {
+        margin: 0 1px;
+        background: #24414c !important;
+    }
+    .skin-blue .treeview-menu > li > a:hover {
+        background: #1d4756!important;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+</style>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="/" class="logo">
+                <span class="logo-mini"><b>S</b>R</span>
+                <span class="logo-lg">Showroom</span>
+            </a>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Menu</span>
+                </a>
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown user user-menu" style="padding-right:17px;">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="user-image" alt="No Image">
+                                <span class="hidden-xs">{{ request.session.user }}</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="img-circle" alt="No Image">
+                                    <p> Admin</p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="/my-profile/" class="btn btn-default btn-flat">Change password</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="/logout/" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        
+        <aside class="main-sidebar" style="background:#2c5871 !important;">
+            <section class="sidebar">
+                <div class="user-panel" style="border-bottom: 1px solid #5c5e9e;background: #3f537373;">
+                    <div class="pull-left image">
+                        <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="img-circle" alt="No Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p>{{ request.session.user }}</p>
+                        <i class="fa fa-circle text-success"></i> <span style="font-size:12px;">Online </span>
+                    </div>
+                </div>
+
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li>
+                        <a href="/my-dashboard/">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-cart-arrow-down"></i>
+                            <span>Product Management</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/my-sold-list/"><i class="fa fa-th-large"></i><span>Add Product Category</span></a></li> 
+                            <li><a href="/my-sold-list/"><i class="fa fa-plus-circle"></i><span>Add Product</span></a></li>
+                            <li><a href="/my-sold-list/"><i class="fa fa-list"></i><span>Product List</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-cart-arrow-down"></i>
+                            <span>Sales</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/my-sold-list/"><i class="fa fa-shopping-bag"></i><span>Add Sales Product</span></a></li> 
+                            <li><a href="/my-sold-list/"><i class="fa fa-list"></i><span>Sold list</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-money"></i>
+                            <span>Installment</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/my-sold-list/"><i class="fa fa-spinner"></i><span>Today Paid Installment</span></a></li> 
+                            <li><a href="/my-sold-list/"><i class="fa fa-list"></i><span>Installment list</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-files-o"></i>
+                            <span>Reports</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/my/daily-report/" target="_blank_"><i class="fa fa-hand-o-right"></i>Daily Report</a></li>
+                            <li><a href="/my/monthly-report/" target="_blank_" ><i class="fa fa-hand-o-right"></i>Monthly Report</a></li>
+                            <li><a href="/my/yearly-report/" target="_blank_" ><i class="fa fa-hand-o-right"></i>Yearly Report</a></li>
+                            <li><a href="/my/date-wise-report/"><i class="fa fa-hand-o-right"></i>Date To Date Report</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-cogs"></i>
+                            <span>Settings</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="/my-profile/"><i class="fa fa-edit"></i>My Profile</a></li>
+                            <li><a href="/change-my-password/"><i class="fa fa-asterisk"></i>Change Password</a></li>  
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+        
+        {% block contain %}
+
+        {% endblock  %}
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2019 All rights reserved | Developed By: <a href="https://www.pythonbd.com/" target="_blank_" title="Pythonbd" style="padding-left: 5px;">Pythonbd</a></strong>
+        </footer>
+        <div class="control-sidebar-bg"></div>
+    </div>
+
+    <!-- jQuery 3 -->
+    <script src="{% static 'showroom/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/bower_components/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script> $.widget.bridge('uibutton', $.ui.button); </script>
+    <script src="{% static 'showroom/admin/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/plugins/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'showroom/admin/bower_components/jquery-knob/dist/jquery.knob.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/bower_components/moment/min/moment.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/bower_components/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+    <script src="{% static 'showroom/admin/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/bower_components/fastclick/lib/fastclick.js' %}"></script>
+    <script src="{% static 'showroom/admin/dist/js/adminlte.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/dist/js/pages/dashboard.js' %}"></script>
+    <script src="{% static 'showroom/admin/dist/js/demo.js' %}"></script>
+    <script src="{% static 'showroom/admin/plugins/iCheck/icheck.min.js' %}"></script>    <script src="{% static 'showroom/admin/plugins/timepicker/bootstrap-timepicker.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/bower_components/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'showroom/admin/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script> 
+
+</body>
+</html>

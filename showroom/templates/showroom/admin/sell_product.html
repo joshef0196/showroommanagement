@@ -1,0 +1,254 @@
+{% extends 'recycle/user/base.html' %}
+{% block title %} Pickup Request My product {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+<style>
+	.namecolor label{
+	color: #009688 !important;
+	font-weight: bold !important;
+	}
+	.container {
+		display: block;
+		position: relative;
+		padding-left: 35px;
+		margin-bottom: 12px;
+		cursor: pointer;
+		font-size: 16px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	.container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+	}
+	.checkmark {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 25px;
+		width: 25px;
+		background-color: #cccdce;
+		border-radius: 50%;
+	}
+	.container:hover input ~ .checkmark {
+		background-color: #ccc;
+	}
+
+	.container input:checked ~ .checkmark {
+		background-color: #2196F3;
+	}
+
+	.checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	.container input:checked ~ .checkmark:after {
+		display: block;
+	}
+
+	.container .checkmark:after {
+		top: 9px;
+		left: 9px;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: white;
+	}
+
+</style>
+
+<div class="content-wrapper">
+    <section class="content-header"><br>
+        <ol class="breadcrumb">
+            <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Pickup Request</li>
+        </ol>
+    </section>
+
+	<section class="content">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="box">
+					{% if messages %}
+						{% for message in messages %}
+							<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								{% if message.tags %} <h4>{{ message }}</h4>{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+
+					<div class="row">
+			            <div class="col-md-4">
+                            <div class="box-header">
+                                <h3 class="box-title">Pickup Request</h3>
+                            </div>
+                        </div>
+			            <div class="col-md-8 text-right">
+                            <div class="box-header">
+                                <a href="/my-dashboard/"><h3 class="box-title"><i class="fa fa-hand-o-right"></i> Go to Home Page</h3></a>
+                            </div>
+                        </div>
+                    </div>
+					
+					<form role="form" method="POST"> {% csrf_token %}
+						<div class="box-body">
+							<div class="form-group namecolor">
+								<label>Item Category :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-bars"></i>
+									</div>
+									<select class="form-control" name = "item_category" id="category_id" required>
+										{% for data in item_category %}
+											<option style="color: #421605;" value="{{ data.id }}" >{{ data.name }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Price :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-money"></i>
+									</div>
+									<input type="text" style="color: #dc2929ed; font-weight: bold;" class="form-control" id="price" name="price_kg" placeholder="Per KG Price" readonly>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Item Name :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-tasks"></i>
+									</div>
+									<input type="text" class="form-control" name="item_name" placeholder="Input your product name" required>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label>Your Area :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-area-chart"></i>
+									</div>
+									<select class="form-control" name="area" required>
+										{% for data in area_list %}
+											<option value="{{ data.id }}" >{{ data.area_name }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label>Pick up Date :</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right" name="pickup_date" id="datepicker" placeholder="Pick up Date">
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Pick up Time :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-clock-o"></i>
+									</div>
+									<select class="form-control" name = "pickup_time">
+										{% for data in pickup_time %}
+											<option value="{{ data.id }}">{{ data.pickup_time }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Approximate Weight:</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-balance-scale"></i>
+									</div>
+									<input type="number" class="form-control" name="approximate_weight" placeholder="Input wight of the item in KG" >
+								</div>
+							</div>
+							
+							<div class="form-group namecolor">
+								<label>Contact Number:</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-phone"></i>
+									</div>
+									<input type="text" name="mobile" class="form-control" value="{{ request.session.number }}" placeholder="Enter your contact number" data-mask required>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label>Address :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-address-card"></i>
+									</div>
+									<textarea class="form-control" rows="1" placeholder="Enter your address" name="address"></textarea>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<div class="input-group" >
+									<label class="container">Sell 
+										<input type="radio" value="2" name="product_for" checked>
+										<span class="checkmark"></span>
+									</label>								
+									<label class="container">Donate
+										<input type="radio" value="1" name="product_for">
+										<span class="checkmark"></span>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+	<script src="{% static 'recycle/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+	<script>
+		$(function () {
+			$('#datepicker').datepicker({
+				autoclose: true
+			})
+			$('[data-mask]').inputmask()
+			//Timepicker
+			$('.timepicker').timepicker({
+				showInputs: false
+			})
+		})
+
+		$('#category_id').change(function(){
+        var url = '/sell-product/';
+        $.ajax({
+            url: url,
+            data: {
+                'category_id': $('#category_id :selected').val(),
+            },
+            success: function (data) {
+                if (data == "not_found") alert("No product available");
+                else {
+                    $("#price").val(data.price_per_kg);
+                }
+            }
+        });
+    });
+	</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'recycle/user/base.html' %}
+{% block title %} Edit My Profile {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+<div class="content-wrapper">
+    <section class="content-header"><br>
+        <ol class="breadcrumb">
+            <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active"> Edit My Profile</li>
+        </ol>
+    </section>
+
+	<section class="content">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="box">
+
+					<div class="row">
+			            <div class="col-md-4">
+                            <div class="box-header">
+                                <h3 class="box-title">Edit My Profile </h3>
+                            </div>
+                        </div>
+			            <div class="col-md-8 text-right">
+                            <div class="box-header">
+                                <a href="/my-profile/"><h3 class="box-title"><i class="fa fa-hand-o-right"></i> Go to MY Profile</h3></a>
+                            </div>
+                        </div>
+                    </div>
+					
+					<form role="form" method="POST" enctype="multipart/form-data" > {% csrf_token %}
+						<div class="box-body">
+
+							<div class="form-group">
+								<label for="exampleInputEmail1">My Name :</label>
+								<input type="text" class="form-control" name="user_name" value="{{ edit_profile.name }}" placeholder="Enter my name" required>
+							</div>
+							
+							<div class="form-group">
+								<label for="exampleInputFile">My Image :</label>
+								<input type="file" aria-required="true"  value="/static/recycle/media/{{ edit_profile.user_image }}" name="user_image">
+                  				<div class="user_image"><img src="/static/recycle/media/{{ edit_profile.user_image }}" alt="No Images" id="user_image" style="width:150px;height:80px;">
+							</div>
+
+							<div class="form-group">
+								<label>Address :</label>
+								<textarea class="form-control" rows="2" name="address">{{ edit_profile.address }}</textarea>
+							</div>
+						</div>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-primary">Update</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</div>
+{% endblock %}
