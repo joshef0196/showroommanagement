@@ -65,13 +65,14 @@
                         <li class="dropdown user user-menu" style="padding-right:17px;">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="user-image" alt="No Image">
-                                <span class="hidden-xs">{{ request.session.user }}</span>
+                                <span class="hidden-xs">{{ request.session.proprietor_name }}</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="img-circle" alt="No Image">
-                                    <p> Admin</p>
+                                    <p> {{ request.session.proprietor_name }}</p>
+                                    <small style="color:rgba(255,255,255,0.8);font-size: 16px;"> {{ request.session.branch_name }}</small>
                                 </li>
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
@@ -79,7 +80,7 @@
                                         <a href="/my-profile/" class="btn btn-default btn-flat">Change password</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="/logout/" class="btn btn-default btn-flat">Sign out</a>
+                                        <a href="/signout/" class="btn btn-default btn-flat">Sign out</a>
                                     </div>
                                 </li>
                             </ul>
@@ -96,7 +97,7 @@
                         <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="img-circle" alt="No Image">
                     </div>
                     <div class="pull-left info">
-                        <p>{{ request.session.user }}</p>
+                        <p>{{ request.session.proprietor_name }}</p>
                         <i class="fa fa-circle text-success"></i> <span style="font-size:12px;">Online </span>
                     </div>
                 </div>
@@ -106,24 +107,6 @@
                         <a href="/my-dashboard/">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         </a>
-                    </li>
-
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-cart-arrow-down"></i>
-                            <span>Product Management</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="/add-brance/"><i class="fa fa-th-large"></i><span>Add Branch</span></a></li> 
-                            <li><a href="/branch-list/"><i class="fa fa-list"></i><span>Branch List</span></a></li> 
-                            <li><a href="/product-category-add/"><i class="fa fa-th-large"></i><span>Add Product Category</span></a></li> 
-                            <li><a href="/category-list/"><i class="fa fa-list"></i><span>Category List</span></a></li> 
-                            <li><a href="/my-sold-list/"><i class="fa fa-plus-circle"></i><span>Add Product</span></a></li>
-                            <li><a href="/my-sold-list/"><i class="fa fa-list"></i><span>Product List</span></a></li>
-                        </ul>
                     </li>
 
                     <li class="treeview">

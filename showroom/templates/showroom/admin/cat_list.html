@@ -1,0 +1,77 @@
+{% extends 'showroom/admin/base.html' %}
+{% block title %} Category list {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Category list</li>
+        </ol>
+    </section>
+    <section class="content">
+      	<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+                    <div class="row">
+			            <div class="col-md-4">
+                            <div class="box-header">
+                                <h3 class="box-title">Category List</h3>
+                            </div>
+                        </div>
+			            <div class="col-md-8 text-right">
+                            <div class="box-header">
+                                <a href="/product-category-add/"><h3 class="box-title"><i class="fa fa-caret-right"></i> Go to add category</h3></a>
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="box-body" style="overflow-x:auto;">
+						<table id="example1" class="table table-bordered table-hover">
+							<thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Branch Name</th>
+                                    <th>Category Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for data in cat_list %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{data.branch}}</td>
+                                        <td>{{data.category_name}}</td>
+                                        <td>{{data.status}}</td>
+                                        <td>
+                                            <a href="/edit/{{ data.area_name }}" class="btn btn-info" title="Edit {{data.area_name}}"><i class="fa fa-edit"></i></a> 
+                                            <a href="/remove-area/{{ data.area_name }}/" class="btn btn-danger" onclick="return confirm(' Are you sure you want to delete this( {{ data.area_name }} )?');" title="Remove {{data.area_name}}"><i class="fa fa-trash-o"></i></a> 
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+    	</div>
+	</section>
+</div>
+<script src="{% static 'recycle/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+{% endblock %}

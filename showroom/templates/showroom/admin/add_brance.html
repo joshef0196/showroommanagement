@@ -1,5 +1,5 @@
-{% extends 'recycle/user/base.html' %}
-{% block title %} Pickup Request My product {% endblock %}
+{% extends 'showroom/admin/base.html' %}
+{% block title %} Add Product Category {% endblock %}
 {% load staticfiles %}
 {% block contain %}
 <style>
@@ -66,7 +66,7 @@
     <section class="content-header"><br>
         <ol class="breadcrumb">
             <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Pickup Request</li>
+            <li class="active">Add Brance</li>
         </ol>
     </section>
 
@@ -86,12 +86,12 @@
 					<div class="row">
 			            <div class="col-md-4">
                             <div class="box-header">
-                                <h3 class="box-title">Pickup Request</h3>
+                                <h3 class="box-title">Add Brance</h3>
                             </div>
                         </div>
 			            <div class="col-md-8 text-right">
                             <div class="box-header">
-                                <a href="/my-dashboard/"><h3 class="box-title"><i class="fa fa-hand-o-right"></i> Go to Home Page</h3></a>
+                                <a href="/category-list/"><h3 class="box-title"><i class="fa fa-caret-right"></i> Go to Brance list</h3></a>
                             </div>
                         </div>
                     </div>
@@ -99,117 +99,82 @@
 					<form role="form" method="POST"> {% csrf_token %}
 						<div class="box-body">
 							<div class="form-group namecolor">
-								<label>Item Category :</label>
+								<label for="exampleInputEmail1">Brance Name :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
-										<i class="fa fa-bars"></i>
+										<i class="fa fa-plus-circle"></i>
 									</div>
-									<select class="form-control" name = "item_category" id="category_id" required>
-										{% for data in item_category %}
-											<option style="color: #421605;" value="{{ data.id }}" >{{ data.name }}</option>
-										{% endfor %}
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Price :</label>
-								<div class="input-group">
-									<div class="input-group-addon">
-										<i class="fa fa-money"></i>
-									</div>
-									<input type="text" style="color: #dc2929ed; font-weight: bold;" class="form-control" id="price" name="price_kg" placeholder="Per KG Price" readonly>
-								</div>
-							</div>
-
-							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Item Name :</label>
-								<div class="input-group">
-									<div class="input-group-addon">
-										<i class="fa fa-tasks"></i>
-									</div>
-									<input type="text" class="form-control" name="item_name" placeholder="Input your product name" required>
-								</div>
-							</div>
-
-							<div class="form-group namecolor">
-								<label>Your Area :</label>
-								<div class="input-group">
-									<div class="input-group-addon">
-										<i class="fa fa-area-chart"></i>
-									</div>
-									<select class="form-control" name="area" required>
-										{% for data in area_list %}
-											<option value="{{ data.id }}" >{{ data.area_name }}</option>
-										{% endfor %}
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group namecolor">
-								<label>Pick up Date :</label>
-								<div class="input-group date">
-									<div class="input-group-addon">
-										<i class="fa fa-calendar"></i>
-									</div>
-									<input type="text" class="form-control pull-right" name="pickup_date" id="datepicker" placeholder="Pick up Date">
-								</div>
-							</div>
-
-							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Pick up Time :</label>
-								<div class="input-group">
-									<div class="input-group-addon">
-										<i class="fa fa-clock-o"></i>
-									</div>
-									<select class="form-control" name = "pickup_time">
-										{% for data in pickup_time %}
-											<option value="{{ data.id }}">{{ data.pickup_time }}</option>
-										{% endfor %}
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Approximate Weight:</label>
-								<div class="input-group">
-									<div class="input-group-addon">
-										<i class="fa fa-balance-scale"></i>
-									</div>
-									<input type="number" class="form-control" name="approximate_weight" placeholder="Input wight of the item in KG" >
+									<input type="text" class="form-control" name="brance_name" placeholder="Brance Name" required>
 								</div>
 							</div>
 							
 							<div class="form-group namecolor">
-								<label>Contact Number:</label>
+								<label for="exampleInputEmail1">Proprietor Name :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-plus-circle"></i>
+									</div>
+									<input type="text" class="form-control" name="proprietor_name" placeholder="Proprietor Name" required>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Username :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-user-o"></i>
+									</div>
+									<input type="text" class="form-control" name="username" placeholder="Username" required>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Password :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-asterisk"></i>
+									</div>
+									<input type="Password" class="form-control" name="password" placeholder="Password" required>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Email :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-envelope"></i>
+									</div>
+									<input type="email" class="form-control" name="email" placeholder="Email" >
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Mobile :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
 										<i class="fa fa-phone"></i>
 									</div>
-									<input type="text" name="mobile" class="form-control" value="{{ request.session.number }}" placeholder="Enter your contact number" data-mask required>
+									<input type="text" class="form-control" name="mobile" placeholder="Mobile" >
 								</div>
 							</div>
 
 							<div class="form-group namecolor">
-								<label>Address :</label>
+								<label for="exampleInputEmail1">Staring Year :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
-										<i class="fa fa-address-card"></i>
+										<i class="fa fa-mobile"></i>
 									</div>
-									<textarea class="form-control" rows="1" placeholder="Enter your address" name="address"></textarea>
+									<input type="number" class="form-control" name="staring_year" placeholder="Staring Year" required>
 								</div>
 							</div>
 
 							<div class="form-group namecolor">
-								<div class="input-group" >
-									<label class="container">Sell 
-										<input type="radio" value="2" name="product_for" checked>
-										<span class="checkmark"></span>
-									</label>								
-									<label class="container">Donate
-										<input type="radio" value="1" name="product_for">
-										<span class="checkmark"></span>
-									</label>
+								<label for="exampleInputEmail1">Address :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-address-card-o"></i>
+									</div>
+									<textarea class="form-control" rows="2" name="address" placeholder="Address"></textarea>
 								</div>
 							</div>
 						</div>
