@@ -1,0 +1,149 @@
+{% extends 'showroom/admin/base.html' %}
+{% block title %} Add Product Category {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+<style>
+	.namecolor label{
+	color: #009688 !important;
+	font-weight: bold !important;
+	}
+	.container {
+		display: block;
+		position: relative;
+		padding-left: 35px;
+		margin-bottom: 12px;
+		cursor: pointer;
+		font-size: 16px;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	.container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+	}
+	.checkmark {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 25px;
+		width: 25px;
+		background-color: #cccdce;
+		border-radius: 50%;
+	}
+	.container:hover input ~ .checkmark {
+		background-color: #ccc;
+	}
+
+	.container input:checked ~ .checkmark {
+		background-color: #2196F3;
+	}
+
+	.checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	.container input:checked ~ .checkmark:after {
+		display: block;
+	}
+
+	.container .checkmark:after {
+		top: 9px;
+		left: 9px;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: white;
+	}
+
+</style>
+
+<div class="content-wrapper">
+    <section class="content-header"><br>
+        <ol class="breadcrumb">
+            <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Add Category</li>
+        </ol>
+    </section>
+
+	<section class="content">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="box">
+					<div class="row">
+			            <div class="col-md-4">
+                            <div class="box-header">
+                                <h3 class="box-title">Add Category</h3>
+                            </div>
+                        </div>
+			            <div class="col-md-8 text-right">
+                            <div class="box-header">
+                                <a href="/category-list/"><h3 class="box-title"><i class="fa fa-caret-right"></i> Go to Category list</h3></a>
+                            </div>
+                        </div>
+                    </div>
+					
+					<form role="form" method="POST"> {% csrf_token %}
+						<div class="box-body">
+							<div class="form-group namecolor">
+								<label>Select Branch :</label>
+								<select class="form-control" name = "branch_name">
+									<option value="{{ edit_product_cat.branch_id }}" selected>{{ edit_product_cat.branch }}</option>
+									{% for data in branch %}
+										<option value="{{ data.id }}">{{ data.branch_name }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Category Name :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-plus-circle"></i>
+									</div>
+									<input type="text" class="form-control" name="category_name" value="{{ edit_product_cat.category_name }}" placeholder="Category Name" required>
+								</div>
+							</div>
+						</div>
+						<div class="box-footer">
+							<button type="submit" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+	<script src="{% static 'recycle/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+	<script>
+		$(function () {
+			$('#datepicker').datepicker({
+				autoclose: true
+			})
+			$('[data-mask]').inputmask()
+			//Timepicker
+			$('.timepicker').timepicker({
+				showInputs: false
+			})
+		})
+
+		$('#category_id').change(function(){
+        var url = '/sell-product/';
+        $.ajax({
+            url: url,
+            data: {
+                'category_id': $('#category_id :selected').val(),
+            },
+            success: function (data) {
+                if (data == "not_found") alert("No product available");
+                else {
+                    $("#price").val(data.price_per_kg);
+                }
+            }
+        });
+    });
+	</script>
+{% endblock %}

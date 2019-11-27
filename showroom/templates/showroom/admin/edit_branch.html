@@ -1,5 +1,5 @@
 {% extends 'showroom/admin/base.html' %}
-{% block title %} Add Branch {% endblock %}
+{% block title %} Edit Product {% endblock %}
 {% load staticfiles %}
 {% block contain %}
 <style>
@@ -66,7 +66,7 @@
     <section class="content-header"><br>
         <ol class="breadcrumb">
             <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Add Branch</li>
+            <li class="active">Edit Brance</li>
         </ol>
     </section>
 
@@ -86,12 +86,12 @@
 					<div class="row">
 			            <div class="col-md-4">
                             <div class="box-header">
-                                <h3 class="box-title">Add Branch</h3>
+                                <h3 class="box-title">Edit Brance</h3>
                             </div>
                         </div>
 			            <div class="col-md-8 text-right">
                             <div class="box-header">
-                                <a href="/branch-list/"><h3 class="box-title"><i class="fa fa-caret-right"></i> Go to Branch list</h3></a>
+                                <a href="/branch-list/"><h3 class="box-title"><i class="fa fa-caret-right"></i> Go to Brance list</h3></a>
                             </div>
                         </div>
                     </div>
@@ -99,12 +99,12 @@
 					<form role="form" method="POST"> {% csrf_token %}
 						<div class="box-body">
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Branch Name :</label>
+								<label for="exampleInputEmail1">Brance Name :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
 										<i class="fa fa-plus-circle"></i>
 									</div>
-									<input type="text" class="form-control" name="brance_name" placeholder="Branch Name" required>
+									<input type="text" class="form-control" value="{{ edit_branch.branch_name }}" name="brance_name" placeholder="Brance Name" required>
 								</div>
 							</div>
 							
@@ -114,7 +114,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-plus-circle"></i>
 									</div>
-									<input type="text" class="form-control" name="proprietor_name" placeholder="Proprietor Name" required>
+									<input type="text" class="form-control" value="{{ edit_branch.proprietor_name }}" name="proprietor_name" placeholder="Proprietor Name" required>
 								</div>
 							</div>
 
@@ -124,17 +124,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-user-o"></i>
 									</div>
-									<input type="text" class="form-control" name="username" placeholder="Username" required>
-								</div>
-							</div>
-
-							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Password :</label>
-								<div class="input-group">
-									<div class="input-group-addon">
-										<i class="fa fa-asterisk"></i>
-									</div>
-									<input type="Password" class="form-control" name="password" placeholder="Password" required>
+									<input type="text" class="form-control" value="{{ edit_branch.user_name }}" name="username" placeholder="Username" required>
 								</div>
 							</div>
 
@@ -144,7 +134,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-envelope"></i>
 									</div>
-									<input type="email" class="form-control" name="email" placeholder="Email" >
+									<input type="email" class="form-control" value="{{ edit_branch.email }}" name="email" placeholder="Email" >
 								</div>
 							</div>
 
@@ -154,7 +144,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-phone"></i>
 									</div>
-									<input type="text" class="form-control" name="mobile" placeholder="Mobile" >
+									<input type="text" class="form-control" value="{{ edit_branch.mobile }}" name="mobile" placeholder="Mobile" >
 								</div>
 							</div>
 
@@ -164,7 +154,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-mobile"></i>
 									</div>
-									<input type="number" class="form-control" name="staring_year" placeholder="Staring Year" required>
+									<input type="number" class="form-control" value="{{ edit_branch.staring_year }}" name="staring_year" placeholder="Staring Year" required>
 								</div>
 							</div>
 

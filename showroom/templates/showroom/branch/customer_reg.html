@@ -1,5 +1,5 @@
-{% extends 'showroom/admin/base.html' %}
-{% block title %} Add Branch {% endblock %}
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Add Product {% endblock %}
 {% load staticfiles %}
 {% block contain %}
 <style>
@@ -66,7 +66,7 @@
     <section class="content-header"><br>
         <ol class="breadcrumb">
             <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Add Branch</li>
+            <li class="active">Add Products</li>
         </ol>
     </section>
 
@@ -86,95 +86,158 @@
 					<div class="row">
 			            <div class="col-md-4">
                             <div class="box-header">
-                                <h3 class="box-title">Add Branch</h3>
+                                <h3 class="box-title">Add Products</h3>
                             </div>
                         </div>
 			            <div class="col-md-8 text-right">
                             <div class="box-header">
-                                <a href="/branch-list/"><h3 class="box-title"><i class="fa fa-caret-right"></i> Go to Branch list</h3></a>
+                                <a href="/product-list/"><h3 class="box-title"><i class="fa fa-caret-right"></i>Go to Product list</h3></a>
                             </div>
                         </div>
                     </div>
 					
-					<form role="form" method="POST"> {% csrf_token %}
+					<form role="form" method="POST" enctype="multipart/form-data" > {% csrf_token %}
 						<div class="box-body">
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Branch Name :</label>
+								<label>Select Category :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-th-large"></i>
+									</div>
+									<select class="form-control" name = "category_name">
+										{% for data in pro_cat %}
+											<option value="{{ data.id }}" required>{{ data.category_name }}</option>
+										{% endfor %}
+									</select>
+									<div class="input-group-addon">
+										<a style="height:21px;" title = "Add Category" href="/product-category-add/"><i class="fa fa-plus-circle"></i></a>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label>Select Branch :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-home"></i>
+									</div>
+									<select class="form-control" name = "branch_name" >
+										{% for data in brance_list %}
+											<option value="{{ data.id }}" required>{{ data.branch_name }}</option>
+										{% endfor %}
+									</select>
+									<div class="input-group-addon">
+										<a style="height:21px;" title = "Add Category" href="/add-brance/"><i class="fa fa-plus-circle"></i></a>
+									</div>
+								</div>
+							</div>
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Product Name :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
 										<i class="fa fa-plus-circle"></i>
 									</div>
-									<input type="text" class="form-control" name="brance_name" placeholder="Branch Name" required>
+									<input type="text" class="form-control" name="product_name" placeholder="Product Name" required>
 								</div>
 							</div>
 							
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Proprietor Name :</label>
+								<label for="exampleInputEmail1">Brand Name :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
-										<i class="fa fa-plus-circle"></i>
+										<i class="fa fa-bold"></i>
 									</div>
-									<input type="text" class="form-control" name="proprietor_name" placeholder="Proprietor Name" required>
+									<input type="text" class="form-control" name="brand_name" placeholder="Brand Name" required>
 								</div>
 							</div>
 
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Username :</label>
+								<label for="exampleInputEmail1">Product Image :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
-										<i class="fa fa-user-o"></i>
+										<i class="fa fa-picture-o"></i>
 									</div>
-									<input type="text" class="form-control" name="username" placeholder="Username" required>
+									<input type="file" id="exampleInputFile" name="product_image">
 								</div>
 							</div>
 
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Password :</label>
+								<label for="exampleInputEmail1">Product Model Number :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
-										<i class="fa fa-asterisk"></i>
+										<i class="fa fa-circle"></i>
 									</div>
-									<input type="Password" class="form-control" name="password" placeholder="Password" required>
+									<input type="text" class="form-control" name="product_model_number" placeholder="Product Model" >
 								</div>
 							</div>
 
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Email :</label>
+								<label for="exampleInputEmail1">Product Color :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
-										<i class="fa fa-envelope"></i>
+										<i class="fa fa-braille"></i>
 									</div>
-									<input type="email" class="form-control" name="email" placeholder="Email" >
+									<input type="text" class="form-control" name="product_color" placeholder="Product Color" >
 								</div>
 							</div>
 
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Mobile :</label>
+								<label for="exampleInputEmail1">Total Quantity :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
-										<i class="fa fa-phone"></i>
+										<i class="fa fa-sort-numeric-desc"></i>
 									</div>
-									<input type="text" class="form-control" name="mobile" placeholder="Mobile" >
+									<input type="number" class="form-control" name="total_quantity" placeholder="Total Quantity " required>
 								</div>
 							</div>
 
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Staring Year :</label>
+								<label for="exampleInputEmail1">Unit Price By Cash :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
-										<i class="fa fa-mobile"></i>
+										<i class="fa fa-money"></i>
 									</div>
-									<input type="number" class="form-control" name="staring_year" placeholder="Staring Year" required>
+									<input type="number" class="form-control" name="unit_price_by_cash" placeholder="Unit Price By Cash" required>
 								</div>
 							</div>
 
 							<div class="form-group namecolor">
-								<label for="exampleInputEmail1">Address :</label>
+								<label for="exampleInputEmail1">Unit Price By Installment :</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-usd"></i>
+									</div>
+									<input type="number" class="form-control" name="unit_price_by_installment" placeholder="Unit Price By Installment" required>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Buy Price:</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-usd"></i>
+									</div>
+									<input type="number" class="form-control" name="buy_price" placeholder="Buy Price" required>
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Maximum Discount:</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-usd"></i>
+									</div>
+									<input type="number" class="form-control" name="maximum_discount" placeholder="Maximum Discount">
+								</div>
+							</div>
+
+							<div class="form-group namecolor">
+								<label for="exampleInputEmail1">Discription :</label>
 								<div class="input-group">
 									<div class="input-group-addon">
 										<i class="fa fa-address-card-o"></i>
 									</div>
-									<textarea class="form-control" rows="2" name="address" placeholder="Address"></textarea>
+									<textarea class="form-control" rows="2" name="discription" placeholder="Discription"></textarea>
 								</div>
 							</div>
 						</div>

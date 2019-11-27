@@ -1,0 +1,8 @@
+{% if product_list %}
+    <option value="">Select</option>  
+    {% for cat in product_list %}
+        <option value="{{ cat.id }}">{{ cat.product_name }}</option>
+    {% endfor %}
+{% else %}
+      <option value="">No Product</option>  
+{% endif %}
