@@ -1,0 +1,74 @@
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Category list {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+      	<div class="row">
+			<div class="col-xs-8">
+				<div class="box">
+                    {% if messages %}
+						{% for message in messages %}
+							<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								{% if message.tags %} <h4>{{ message }}</h4>{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+                    <div class="row">
+			            <div class="col-md-4">
+                            <div class="box-header">
+                                <h3 class="box-title">Category List</h3>
+                            </div>
+                        </div>
+			            <div class="col-md-8 text-right">
+                            <div class="box-header">
+                                <a href="/add-category/"><h3 class="box-title"><i class="fa fa-caret-right"></i> Go to add category</h3></a>
+                            </div>
+                        </div>
+                    </div>
+					
+					<div class="box-body" style="overflow-x:auto;">
+						<table id="example1" class="table table-bordered table-hover">
+							<thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Category Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for data in cat_list %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{data.category_name}}</td>
+                                        <td>
+                                            <a href="/edit-category/{{ data.id }}" class="btn btn-info" title="Edit {{data.category_name}}"><i class="fa fa-edit"></i></a> 
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+    	</div>
+	</section>
+</div>
+<script src="{% static 'recycle/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+{% endblock %}

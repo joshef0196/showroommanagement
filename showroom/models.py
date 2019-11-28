@@ -25,15 +25,15 @@ class CustomerRegistration(models.Model):
     name                  = models.CharField(max_length=50)
     email                 = models.EmailField(max_length=80,blank=True)
     mobile                = models.CharField(max_length=16)
-    mobile2               = models.CharField(max_length=16,blank=True)
+    mobile1               = models.CharField(max_length=16,blank=True)
     nid_number            = models.CharField(max_length=50)
     customer_image        = models.ImageField(upload_to="customer_image/", blank=True)
     nid_image             = models.ImageField(upload_to="nid_image/", blank=True)
     present_address       = models.TextField(blank=True)
     permanent_address     = models.TextField(blank=True)
     profession            = models.CharField(max_length=150,blank=True)
-    reference_person      = models.CharField(max_length=50,blank=True)
-    reference_address     = models.CharField(max_length=150,blank=True)
+    reference_person      = models.CharField(max_length=50)
+    reference_address     = models.CharField(max_length=150)
     reference_mobile      = models.CharField(max_length=15,blank=True)
     reg_date              = models.DateField(auto_now_add=True)
     status                = models.BooleanField(default=True)
@@ -90,24 +90,28 @@ class SaleProducts(models.Model):
         ("1", "Full Payment"),
         ("2", "Installment"),
     )
-    payment_type         = models.CharField(max_length=1, choices=payment_types)
-    sale_quantity        = models.IntegerField(default=1)
-    discount             = models.FloatField(default=0)
-    total_price          = models.FloatField(default=0)
-    due_amount           = models.FloatField(default=0)
-    comment              = models.TextField(blank=True)
-    next_installment_date= models.DateTimeField(auto_now_add=False)
-    sale_date            = models.DateTimeField(auto_now_add=True)
-    status               = models.BooleanField(default=True)
+    payment_type           = models.CharField(max_length=1, choices=payment_types)
+    invoice                = models.IntegerField(blank = True, null=True)
+    sale_quantity          = models.IntegerField(default=1)
+    sale_unit_price        = models.IntegerField(default=1)
+    discount               = models.FloatField(default=0)
+    total_price            = models.FloatField(default=0)
+    due_amount             = models.FloatField(default=0)
+    comment                = models.TextField(blank=True)
+    next_installment_date  = models.DateTimeField(auto_now_add=False, blank = True, null=True)
+    next_installment_amount= models.IntegerField(default=0)
+    sale_date              = models.DateTimeField(auto_now_add=True)
+    status                 = models.BooleanField(default=True)
 
     def __str__(self):
         return str(self.customer)
 
     class Meta:
-        verbose_name        ='Sales Product'
+        verbose_name        ='Product'
         verbose_name_plural ='Sales Products'
 
 class InstallmentCollection(models.Model):
+    invoice                  = models.IntegerField(blank = True, null=True)
     branch                   = models.ForeignKey(Branches, on_delete=models.CASCADE)
     customer                 = models.ForeignKey(CustomerRegistration, on_delete=models.CASCADE)
     product                  = models.ForeignKey(SaleProducts, on_delete=models.CASCADE)

@@ -1,0 +1,133 @@
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Installment Collection {% endblock %}
+{% load staticfiles %}
+{% load mathfilters %}
+{% block contain %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+      	<div class="row">
+			<div class="col-xs-6">
+				<div class="box">
+                    {% if messages %}
+						{% for message in messages %}
+							<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								{% if message.tags %} <h4>{{ message }}</h4>{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+					
+					<div class="box-body" style="overflow-x:auto;">
+                        {% if product.product.product_image %}
+                            <img src="/static/showroom/media/{{ product.product.product_image }}" class="profile-user-img img-responsive" alt="{{ product.product }}">
+                        {% else %}
+                            <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="profile-user-img img-responsive img-circle" alt="No Image">
+                        {% endif %} 
+						<table id="product_tbl" class="table table-bordered table-hover">
+							<tdead>
+                                <tr style="font-size:13px;">
+                                    <td style="text-align:right;">Category</td> <td> {{ product.product.category_name }} </td>
+                                </tr>
+                                <tr style="font-size:13px;">
+                                    <td style="text-align:right;">Product</td> <td> {{ product.product.product_name }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">  
+                                    <td style="text-align:right;">Customer</td> <td> {{ product.customer }} </td>
+                                 </tr>  
+                                 <tr style="font-size:13px;">  
+                                    <td style="text-align:right;">Invoice</td> <td> {{ product.invoice }} </td>
+                                 </tr>  
+                                 <tr style="font-size:13px;">
+                                    <td style="text-align:right;">Quantity</td> <td> {{ product.sale_quantity }} </td>
+                                 </tr>  
+                                 <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Unit Price</td> <td> {{ product.sale_unit_price }} </td>
+                                 </tr>  
+                                 <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Discount</td> <td> {{ product.discount }} </td>
+                                 </tr>  
+                                 <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Due</td> <td> {{ product.due_amount }} </td>
+                                 </tr>  
+                                 <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Paid</td> <td> {{ product.total_price|sub:product.due_amount|add:product.discount }} </td>
+                                 </tr>  
+                                 <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Total Price</td> <td> {{ product.total_price }} </td>
+                                 </tr>    
+                                 <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Installment Due Date</td> <td> {{ product.next_installment_date }} </td>
+                                 </tr>    
+                                 <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Installment Amount</td> <td> {{ product.next_installment_amount }} </td>
+                                 </tr>    
+                            </tdead>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<div class="box">
+                    <div class="box-body box-profile">
+                        {% if product.customer.customer_image %}
+                            <img src="/static/showroom/media/{{ product.customer.customer_image }}" class="profile-user-img img-responsive img-circle" alt="{{ product.customer }}">
+                        {% else %}
+                            <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="profile-user-img img-responsive img-circle" alt="No Image">
+                        {% endif %}
+                        <h3 class="profile-username text-center">{{ product.customer.name }}</h3>
+                        <p class="text-muted text-center">{{ product.customer.mobile }}</p>
+                        <ul class="list-group list-group-unbordered">
+                            <li class="list-group-item">
+                                <b>Email</b> <a class="pull-right">{{ product.customer.email }}</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>NID</b> <a class="pull-right">{{ product.customer.nid_number }}</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Registration Date</b> <a class="pull-right">{{ product.customer.reg_date }}</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Profession</b> <a class="pull-right">{{ product.customer.profession }}</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Present Address</b> <a class="pull-right">{{ product.customer.present_address }}</a>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Permanent Address</b> <a class="pull-right">{{ product.customer.permanent_address }}</a>
+                            </li>
+                        </ul>
+                        <form role="form" method="POST"> {% csrf_token %}
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <input class="btn btn-default pull-right" value="Next Installment Date">
+                                </span>
+                                <input class="form-control width100" type="date" value="{% now "Y-m-d" %}" name="next_installment_date" required>
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <label class="btn btn-default pull-right">Next Installment Amount</label>
+                                </span>
+                                <input class="form-control width100" type="number" value="{{ product.next_installment_amount }}" name="next_installment_amount" required>
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <label class="btn btn-default pull-right">Pay Amount</label>
+                                </span>
+                                <input class="form-control width100" name="installment_amount" value="{{ product.next_installment_amount }}" required>
+                                <span class="input-group-btn">
+                                    <input type="submit" class="btn btn-success pull-right" value="Payment">
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    
+				</div>
+			</div>
+    	</div>
+	</section>
+</div>
+
+{% endblock %}

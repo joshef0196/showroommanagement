@@ -1,0 +1,163 @@
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Add Product {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+<div class="content-wrapper">
+    <section class="content-header"><br>
+        <div class="row">
+			<div class="col-md-8">
+				<div class="box">
+					{% if messages %}
+						{% for message in messages %}
+							<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								{% if message.tags %} <h4>{{ message }}</h4>{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+
+					<div class="row">
+			            <div class="col-md-4">
+                            <div class="box-header">
+                                <h3 class="box-title">Add Products</h3>
+                            </div>
+                        </div>
+			            <div class="col-md-8 text-right">
+                            <div class="box-header">
+                                <a href="/product-list/"><h3 class="box-title"><i class="fa fa-caret-right"></i>Go to Product list</h3></a>
+                            </div>
+                        </div>
+                    </div>
+					
+					<form role="form" method="POST" enctype="multipart/form-data" > {% csrf_token %}
+						<table class="table table-striped table-bordered">
+                            <tr>
+                                <th>Select Category</th>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <select class="form-control" name = "category_name">
+                                                {% for data in pro_cat %}
+                                                    <option value="{{ data.id }}" required>{{ data.category_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2" style="padding-left:0px;" >
+                                            <a class="btn" title = "Add Category" href="/add-category/"><i style="font-size:15px;" class="fa fa-plus-circle"></i></a>
+                                        </div>               
+                                    </div>               
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Product Name</th>
+                                <td>
+									<input type="text" class="form-control" name="product_name" placeholder="Product Name" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Brand Name</th>
+                                <td>
+									<input type="text" class="form-control" name="brand_name" placeholder="Brand Name" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Product Image</th>
+                                <td>
+									<input type="file" id="exampleInputFile" name="product_image">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Product Model Number</th>
+                                <td>
+									<input type="text" class="form-control" name="product_model_number" placeholder="Product Model" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Product Color</th>
+                                <td>
+									<input type="text" class="form-control" name="product_color" placeholder="Product Color" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Total Quantity</th>
+                                <td>
+									<input type="number" class="form-control" name="total_quantity" placeholder="Total Quantity " required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Unit Price By Cash</th>
+                                <td>
+									<input type="number" class="form-control" name="unit_price_by_cash" placeholder="Unit Price By Cash" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Unit Price By Installment</th>
+                                <td>
+									<input type="number" class="form-control" name="unit_price_by_installment" placeholder="Unit Price By Installment" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Buy Price</th>
+                                <td>
+									<input type="number" class="form-control" name="buy_price" placeholder="Buy Price" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Maximum Discount</th>
+                                <td>
+									<input type="number" class="form-control" name="maximum_discount" placeholder="Maximum Discount">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Discription</th>
+                                <td>
+									<textarea class="form-control" rows="2" name="discription" placeholder="Discription"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <input type="submit" value="Submit" class="btn btn-success">
+                                </td>
+                            </tr>
+                        </table>
+					</form>
+				</div>
+			</div>
+		</div>
+    </section>
+
+	<section class="content">
+		
+	</section>
+</div>
+	<script src="{% static 'recycle/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+	<script>
+		$(function () {
+			$('#datepicker').datepicker({
+				autoclose: true
+			})
+			$('[data-mask]').inputmask()
+			//Timepicker
+			$('.timepicker').timepicker({
+				showInputs: false
+			})
+		})
+
+		$('#category_id').change(function(){
+        var url = '/sell-product/';
+        $.ajax({
+            url: url,
+            data: {
+                'category_id': $('#category_id :selected').val(),
+            },
+            success: function (data) {
+                if (data == "not_found") alert("No product available");
+                else {
+                    $("#price").val(data.price_per_kg);
+                }
+            }
+        });
+    });
+	</script>
+{% endblock %}

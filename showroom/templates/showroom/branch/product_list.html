@@ -1,16 +1,10 @@
-{% extends 'showroom/admin/base.html' %}
-{% block title %} Branch list {% endblock %}
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Product list {% endblock %}
 {% load staticfiles %}
 {% block contain %}
 
 <div class="content-wrapper">
     <section class="content-header">
-        <ol class="breadcrumb">
-            <li><a href="/dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Product list</li>
-        </ol>
-    </section>
-    <section class="content">
       	<div class="row">
 			<div class="col-xs-12">
 				<div class="box">
@@ -79,7 +73,6 @@
                                         <td>{{data.maximum_discount}}</td>
                                         <td>
                                             <a href="/edit/{{ data.area_name }}" class="btn btn-info" title="Edit {{data.area_name}}"><i class="fa fa-edit"></i></a> 
-                                            <a href="/remove-area/{{ data.area_name }}/" class="btn btn-danger" onclick="return confirm(' Are you sure you want to delete this( {{ data.area_name }} )?');" title="Remove {{data.area_name}}"><i class="fa fa-trash-o"></i></a> 
                                         </td>
                                     </tr>
                                 {% endfor %}

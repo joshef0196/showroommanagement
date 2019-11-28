@@ -23,7 +23,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mathfilters',
     'showroom',
     'ckeditor',
     'ckeditor_uploader'

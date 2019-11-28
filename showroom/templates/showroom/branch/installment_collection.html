@@ -1,0 +1,113 @@
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Installment Collection {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+      	<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+                    {% if messages %}
+						{% for message in messages %}
+							<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								{% if message.tags %} <h4>{{ message }}</h4>{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+					
+					<div class="box-body" style="overflow-x:auto;">
+                        <form role="form" method="POST"> {% csrf_token %}
+                            <table id="example1" class="table table-bordered table-hover">
+                                <tr>
+                                    <td style="text-align:right;vertical-align:middle;">Search</td>
+                                    <td>
+                                        <input type="text" id="search" class="form-control" name="search" {% if search %} value="{{ search }}" {% endif %} placeholder = "Customer Name/Mobile/Email/NID/Invoice/Product Name" required>
+                                    </td>
+                                    <td>
+                                        <input type="submit" class="btn btn-success" value="Search">
+                                    </td>
+                                </tr>
+                            <table>  
+                        </form> 
+                    {% if product_list %}
+						<table id="product_tbl" class="table table-bordered table-hover">
+							<thead>
+                                <tr style="font-size:13px;">
+                                    <th>SL</th>
+                                    <th>Category</th>
+                                    <th>Product</th>
+                                    <th>Customer</th>
+                                    <th>Invoice</th>
+                                    <th style="text-align:center;">Qty</th>
+                                    <th style="text-align:right;">Unit Price</th>
+                                    <th style="text-align:right;">Disc.</th>
+                                    <th style="text-align:right;">Due</th>
+                                    <th style="text-align:right;">Total Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for data in product_list %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{data.product.category_name}}</td>
+                                        <td>{{data.product.product_name}}</td>
+                                        <td>{{data.customer}}</td>
+                                        <td>{{data.invoice}}</td>
+                                        <td style="text-align:center;">{{data.sale_quantity}}</td>
+                                        <td style="text-align:right;">{{data.sale_unit_price}}</td>
+                                        <td style="text-align:right;">{{data.discount}}</td>
+                                        <td style="text-align:right;">{{data.due_amount}}</td>
+                                        <td style="text-align:right;">{{data.total_price}}</td>
+                                        <td>
+                                            <a href="/{{ data.id }}/installment-details/" class="btn btn-info" title="Pay"><i class="fa fa-dollar"></i></a>  
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+						</table>
+                    {% elif not product_list and request.POST %}
+                            <h2 style="color:red;text-align:center;">Not Found </h2>
+                    {% endif %}
+					</div>
+				</div>
+			</div>
+    	</div>
+	</section>
+</div>
+	<script src="{% static 'showroom/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+	<script>
+    $('#search1').keyup(function(){
+        var url = '/customer-product-list/';
+        $.ajax({
+            url: url,
+            method:"GET",
+            data: {
+                'search': $('#search').val(),
+            },
+            success: function(data) {
+                if (data == "not_found") alert("No product found!");
+                else {
+                    $('#product_tbl tbody').html("");
+                    var tr;
+                    for (var i = 0; i < data.length; i++) {
+                        tr = $('<tr/>');
+                        tr.append("<td>" + data[i].product_id__category_name_id__category_name + "</td>");
+                        tr.append("<td>" + data[i].product_id__product_name + "</td>");
+                        tr.append("<td" + data[i].customer_id__name + "("+ data[i].customer_id__mobile +")" + "</td>");
+                        tr.append("<td>" + data[i].sale_quantity + "</td>");
+                        tr.append("<td>" + data[i].sale_unit_price + "</td>");
+                        tr.append("<td>" + data[i].discount + "</td>");
+                        tr.append("<td>" + data[i].total_price + "</td>");
+                        tr.append("<td>" + '<input type="button" id="btnReturnBook" onclick="bookReturn('+data[i].id+')" value="Return Book" class="btn btn-success"/>' + "</td>");
+                        $('#product_tbl tbody').append(tr);
+                    }
+                }
+            }
+        });
+    });
+	</script>
+{% endblock %}

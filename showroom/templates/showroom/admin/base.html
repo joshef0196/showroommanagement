@@ -17,6 +17,7 @@
     {% comment %} <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/Ionicons/css/ionicons.min.css' %}"> {% endcomment %}
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'showroom/admin/dist/css/AdminLTE.css' %}">
+    <link rel="stylesheet" href="{% static 'showroom/admin/dist/css/style.css' %}">
     {% comment %} <link rel="stylesheet" href="{% static 'showroom/admin/dist/css/AdminLTE.min.css' %}"> {% endcomment %}
     <link rel="stylesheet" href="{% static 'showroom/admin/dist/css/skins/_all-skins.min.css' %}">
     <link rel="stylesheet" href="{% static 'showroom/admin/bower_components/morris.js/morris.css' %}">
@@ -112,7 +113,7 @@
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-cart-arrow-down"></i>
-                            <span>Product Management</span>
+                            <span>Branch Management</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
@@ -120,10 +121,6 @@
                         <ul class="treeview-menu">
                             <li><a href="/add-brance/"><i class="fa fa-th-large"></i><span>Add Branch</span></a></li> 
                             <li><a href="/branch-list/"><i class="fa fa-list"></i><span>Branch List</span></a></li> 
-                            <li><a href="/product-category-add/"><i class="fa fa-th-large"></i><span>Add Product Category</span></a></li> 
-                            <li><a href="/category-list/"><i class="fa fa-list"></i><span>Category List</span></a></li> 
-                            <li><a href="/add-product/"><i class="fa fa-plus-circle"></i><span>Add Product</span></a></li>
-                            <li><a href="/product-list/"><i class="fa fa-list"></i><span>Product List</span></a></li>
                         </ul>
                     </li>
 
@@ -136,8 +133,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="/my-sold-list/"><i class="fa fa-shopping-bag"></i><span>Add Sales Product</span></a></li> 
-                            <li><a href="/my-sold-list/"><i class="fa fa-list"></i><span>Sold list</span></a></li>
+                            <li><a href="/my-sold-list/"><i class="fa fa-list"></i><span>Sold list With Cash</span></a></li>
+                            <li><a href="/my-sold-list/"><i class="fa fa-list"></i><span>Sold list With Installment</span></a></li>
                         </ul>
                     </li>
 
@@ -180,8 +177,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="/my-profile/"><i class="fa fa-edit"></i>My Profile</a></li>
-                            <li><a href="/change-my-password/"><i class="fa fa-asterisk"></i>Change Password</a></li>  
+                            <li><a href="/change-password/"><i class="fa fa-asterisk"></i>Change Password</a></li>  
+                            <li><a href="/logout/"><i class="fa fa-sign-out"></i>Logout</a></li>
                         </ul>
                     </li>
                 </ul>

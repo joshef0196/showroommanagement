@@ -1,0 +1,184 @@
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Cash Sales | Product {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+
+<div class="content-wrapper">
+	<section class="content-header">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="box">
+					{% if messages %}
+						{% for message in messages %}
+							<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								{% if message.tags %} <h4>{{ message }}</h4>{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+					<div class="row">
+			            <div class="col-md-10">
+                            <div class="box-header">
+                                <h3 class="box-title">Sales Products By Cash</h3>
+                            </div>
+                        </div>
+                    </div>
+					<form role="form" method="POST" enctype="multipart/form-data" > {% csrf_token %}
+						<table class="table table-striped table-bordered">
+                            <tr>
+                                <th> Select Customer </th>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                        <select class="form-control" name = "customer_id" required>
+                                            {% for data in customer_list %}
+                                                <option value="{{ data.id }}" >{{ data.name }}( {{data.mobile}} )</option>
+                                            {% endfor %}
+                                        </select>
+                                        </div> 
+                                        <div class="col-md-2" style="padding-left:0px;" >
+                                            <a class="btn" title = "Customer Registration" href="/customer-registration/"><i style="font-size:15px;" class="fa fa-plus-circle"></i></a>
+                                        </div>               
+                                    </div> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Select Category</th>
+                                <td>
+                                   <select name="product_cat" class="form-control select" id="category_id" required> 
+                                        <option value="">Select</option>
+										{% for data in product_list %}    
+                                            <option value="{{ data.category_name_id }}">{{ data.category_name }}</option> 
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Product Name</th>
+                                <td>
+                                    <select name="product_name" class="form-control select" id="product_id" required> 
+                                        <option value="">Select</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Brand Name</th>
+                                <td>
+                                    <input type="text" class="form-control" name="brand_name" id="product_brand" placeholder="Brand Name" readonly >
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Model Number</th>
+                                <td>
+                                    <input type="text" class="form-control" name="product_model_number" id="product_model" placeholder="Product Model" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Product Color</th>
+                                <td>
+                                    <input type="text" class="form-control" name="product_color" id="product_color" placeholder="Product Model" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Available Quantity</th>
+                                <td>
+                                    <input type="number" readonly class="form-control" name="available_quantity" id="available_quantity" placeholder="Available Quantity" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Unit Price</th>
+                                <td>
+                                    <input type="number" class="form-control" name="unit_price_cash" id="unit_price_cash" placeholder="Unit Price" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Sale Quantity</th>
+                                <td>
+                                    <input type="number" class="form-control" name="sale_quantity" id="sale_quantity" value="1" required>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th>Discount</th>
+                                <td>
+                                    <input type="number" class="form-control" name="given_discount" id="given_discount" placeholder="Discount" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Total Price</th>
+                                <td>
+                                    <input type="number" class="form-control" name="total_price" id="total_price" placeholder="Total Price" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Discription</th>
+                                <td>
+                                    <textarea type="text" rows="3" class="form-control" placeholder="Discription" name="discription"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <input type="submit" value="Submit" class="btn btn-success">
+                                </td>
+                            </tr>
+                        </table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+	<script src="{% static 'showroom/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+	<script>
+
+    $('#sale_quantity').change(function(){
+        $('#total_price').val(($('#sale_quantity').val()*$("#unit_price_cash").val())-$("#given_discount").val());
+    });
+
+    $('#total_price').change(function(){
+        $('#total_price').val(($('#sale_quantity').val()*$("#unit_price_cash").val())-$("#given_discount").val());
+    });
+
+    $('#given_discount').change(function(){
+        $('#total_price').val(($('#sale_quantity').val()*$("#unit_price_cash").val())-$("#given_discount").val());
+    });
+
+    $('#category_id').change(function(){
+        var url = '/category/product-load/';
+        $.ajax({
+            url: url,
+            data: {
+                'category_id': $('#category_id :selected').val(),
+            },
+            success: function (data) {
+                $("#product_id").html(data);
+            }
+        });
+    });
+
+		$('#product_id').change(function(){
+			var url = '/product-load/';
+			$.ajax({
+				url: url,
+                method:"GET",
+				data: {
+					'product_id': $('#product_id').val(),
+				},
+				success: function (data) {
+					if (data == "not_found") alert("No product available!");
+					else {
+						$("#product_brand").val(data.brand_name);
+						$("#product_model").val(data.product_model_number);
+						$("#product_color").val(data.product_color);
+						$("#available_quantity").val(data.available_quantity);
+						$("#unit_price_cash").val(data.unit_price_by_cash);
+						$("#maximum_discount").val(data.maximum_discount);
+						$("#total_price").val(data.unit_price_by_cash);
+						$("#discription").val(data.discription);
+					}
+				}
+			});
+		});
+	</script>
+{% endblock %}

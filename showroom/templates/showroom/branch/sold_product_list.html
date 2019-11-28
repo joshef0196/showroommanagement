@@ -1,0 +1,79 @@
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Sold Product List {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+
+<div class="content-wrapper" >
+    <section class="content-header">
+      	<div class="row">
+			<div class="col-xs-12">
+				<div class="box">
+                    {% if messages %}
+						{% for message in messages %}
+							<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								{% if message.tags %} <h4>{{ message }}</h4>{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+					
+					<div class="box-body" style="overflow-x:auto;">
+                        <form role="form" method="POST"> {% csrf_token %}
+                            <table id="example1" class="table table-bordered table-hover">
+                                <tr>
+                                    <td>Selling Type</td>
+                                    <td>
+                                        <select name="payment_type" class="form-control select" id="payment_type" required> 
+                                            <option {% if payment_type == "1" %} selected {% endif %} value="1">Full Payment</option>
+                                            <option {% if payment_type == "2" %} selected {% endif %} value="2">Installment</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="submit" value="Search" class="btn btn-success">
+                                    </td>
+                                </tr>
+                            </table>   
+                        </form> 
+                        {% if product_list %}
+                            <table id="example1" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr style="font-size:13px;">
+                                        <th>SL</th>
+                                        <th>Category Name</th>
+                                        <th>Product Name</th>
+                                        <th>Customer</th>
+                                        <th style="text-align:center">Qty</th>
+                                        <th style="text-align:right;">Unit Price</th>
+                                        <th style="text-align:right;">Disc.</th>
+                                        <th style="text-align:right;">Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in product_list %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{data.product.category_name}}</td>
+                                            <td>{{data.product.product_name}}</td>
+                                            <td>{{data.customer}}</td>
+                                            <td style="text-align:center">{{data.sale_quantity}}</td>
+                                            <td style="text-align:right;">{{data.sale_unit_price}}</td>
+                                            <td style="text-align:right;">{{data.discount}}</td>
+                                            <td style="text-align:right;">{{data.total_price}}</td>
+                                            <td>
+                                                <a href="/edit/{{ data.area_name }}" class="btn btn-info" title="Edit {{data.area_name}}"><i class="fa fa-edit"></i></a> 
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% elif not product_list and request.POST %}
+                                <h2 style="color:red;text-align:center;">Not Found </h2>
+                        {% endif %}
+					</div>
+				</div>
+			</div>
+    	</div>
+	</section>
+</div>
+{% endblock %}
