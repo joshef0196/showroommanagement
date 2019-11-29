@@ -15,7 +15,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter     = ['branch','status']
 
 class SaleProductsAdmin(admin.ModelAdmin):
-    list_display    = ['branch','customer','product','payment_type','status']
+    list_display    = ['branch','customer','product','payment_type','sale_date','status']
     list_filter     = ['branch','status']
 
 admin.site.register(models.CustomerRegistration, CustomerRegistrationAdmin)

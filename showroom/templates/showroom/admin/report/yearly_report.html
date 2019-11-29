@@ -1,17 +1,19 @@
 <html>
      <head>
-         <title>Yearly Report | bdrecycle</title>
+         <title>Daily Report</title>
          <meta charset="utf-8" />
      </head>
+     
      <body>
-        <div class='wrapper' style="overflow-x:auto;"> 
+        <div class='wrapper'> 
             <table style="background-color: #eee;">
                 <tr>
                     <td style="width:100%;">
-                        <h1 style="margin:0px;text-align:center;padding-top:30px;font-size:24px;">{{company.com_name}}</h1>
-                        <h4 style="margin:0px;text-align:center;font-size:12px;">{{ company.office_address }}</h4>
-                        <h4 style="margin:0px;text-align:center;font-size:12px;">{% if company.homepage_email1 %}{{ company.homepage_email1 }}{% endif %}{% if company.homepage_mobile %}, {{ company.homepage_mobile }}{% endif %}</h4>
-                        <h4 style="margin:0px;text-align:center;font-size:16px;">Yearly Report( {{ currentyear }} )</h4>
+                        <h1 style="margin:0px;text-align:center;padding-top:30px;font-size:24px;">{{company.com_name}}({{company.branch}})</h1>
+                        <h4 style="margin:0px;text-align:center;font-size:12px;">{{ company.address }}</h4>
+                        <h4 style="margin:0px;text-align:center;font-size:12px;">{{ company.email }}</h4>
+                        <h4 style="margin:0px;text-align:center;font-size:12px;">{% if company.mobile1 %}{{ company.mobile1 }}{% endif %}{% if company.mobile2 %}, {{ company.mobile2 }}{% endif %}</h4>
+                        <h4 style="margin:0px;text-align:center;font-size:16px;">Daily Report( {{ currentdate }})</h4>
                     </td>
                 </tr>
             </table>
@@ -20,31 +22,29 @@
                 <thead>
                     <tr>
                         <th style="width:40px;text-align:center;font-size:9px;padding-top:3px;background-color:#ddd;">SL</th>
-                        <th style="text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;">Item Category & Price</th>
-                        <th style="text-align:left;font-size:9px;padding-top:3px;padding-left:3px;background-color:#ddd;width:20%;">Item Name</th>
-                        <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:20%;">Weight</th>
-                        <th style="text-align:center;font-size:9px;padding-top:3px;background-color:#ddd;width:20%;">Pickup Date/Time</th>
-                        <th style="text-align:left;font-size:9px;padding-top:3px;padding-left:3px;background-color:#ddd;width:20%;">Product For</th>
-                        <th style="width:60px;text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;width:200px;">Request Date</th>
-                        <th style="width:60px;text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;width:200px;">Accepted Date</th>
+                        <th style="text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;">Product</th>
+                        <th style="text-align:left;font-size:9px;padding-top:3px;padding-left:3px;background-color:#ddd;width:20%;">Payment Type</th>
+                        <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:20%;">Sale Quantity</th>
+                        <th style="text-align:right;font-size:9px;padding-top:3px;background-color:#ddd;width:20%;">Discount</th>
+                        <th style="text-align:right;font-size:9px;padding-top:3px;padding-left:3px;background-color:#ddd;width:20%;">Due Amount</th>
+                        <th style="width:60px;text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;width:200px;">Sale Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if yearly_report %}
-                        {% for data in yearly_report %}
+                    {% if daliy_report %}
+                        {% for data in daliy_report %}
                             <tr class="gradeX odd" role="row">
                                 <td style="text-align:center;font-size:8px;padding-top:3px;width:10%;">{{ forloop.counter }}</td>
-                                <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:50%;"> {{data.category_name}}( {{data.category_name.price_per_kg}} )</td>
-                                <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:40%;"> {{data.item_name}} </td>
-                                <td style="text-align:center;font-size:8px;padding-top:3px;width:20%;"> {{data.approximate_weight}} </td>
-                                <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:40%;"> {{data.pickup_date}}({{data.pickup_time}}) </td>
-                                <td style="text-align:left;font-size:8px;padding-top:3px;width:30%;padding-left:3px;"> {{ data.get_product_for_display }} </td>
-                                <td style="text-align:left;font-size:8px;padding-top:3px;width:40%;padding-left:3px;"> {{ data.request_date|date:"M-d-Y" }} </td>
-                                <td style="text-align:left;font-size:8px;padding-top:3px;width:30%;padding-left:3px;color:green;" title="dfs">{{ data.completed_date|date:"M-d-Y" }} </td>
+                                <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:20%;"> {{data.product}}</td>
+                                <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:20%;"> {{data.get_payment_type_display}} </td>
+                                <td style="text-align:center;font-size:8px;padding-top:3px;width:20%;"> {{data.sale_quantity}} </td>
+                                <td style="text-align:right;font-size:8px;padding-right:3px;padding-top:3px;width:40%;"> {{data.discount}}</td>
+                                <td style="text-align:right;font-size:8px;padding-right:3px;width:30%;padding-left:3px;"> {{ data.due_amount }} </td>
+                                <td style="text-align:left;font-size:8px;padding-top:3px;width:40%;padding-left:3px;"> {{ data.sale_date|date:"M-d-Y" }} </td>
                             </tr>
                         {% endfor %}
                     {% else %}
-                         <td style="text-align:center;font-size:10px;padding-top:3px; color:red;" colspan="8">No Data Found</td>
+                         <td style="text-align:center;font-size:10px;padding-top:3px; color:red;" colspan="7">No Data Found</td>
                     {% endif %}
                 </tbody>
             </table>

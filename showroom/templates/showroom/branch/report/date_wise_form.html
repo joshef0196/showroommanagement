@@ -1,0 +1,75 @@
+{% extends 'recycle/user/base.html' %}
+{% block title %} Date to Date Report {% endblock %}
+{% load staticfiles %}
+{% block contain %}
+<style>
+.date_form {
+    padding-left: 20%;
+}
+.salesman {
+    padding: 7px;
+    border: 2px solid red;
+    border-radius: 5px;
+    margin-left: 13px;
+    width: 150px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.ser {
+
+    padding: 7px;
+    width: 120px;
+    border: 2px solid green;
+    border-radius: 5px;
+    margin-left: 13px;
+    font-size: 14px;
+    font-weight: bold;
+
+}
+.ser:hover {
+    background-color: #18d05c !important;
+    color: #fff;
+    border: 2px solid #23ae50;
+}
+</style>
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1> Dashboard <small>Control panel</small> </h1>
+        <ol class="breadcrumb">
+            <li><a href="/my-dashboard/"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Dashboard</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="clearfix visible-sm-block"></div>
+            <div class="banner-section">
+                <form  method="post" target="_blank"> {% csrf_token %}
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="date_form">
+                                <div class="col-md-12 form-group sel">
+                                    <input type="date" class="salesman" title="From Date" name="from_date" {% if from_date %} value="{{ from_date|date:"Y-m-d" }}" {% else %} value="{% now "Y-m-d" %}"  {% endif %} required>
+                                    <input type="date" class="salesman" title="To Date" name="to_date" {% if to_date %} value="{{ to_date|date:"Y-m-d" }}" {% else %} value="{% now "Y-m-d" %}"  {% endif %} required>
+                                    <input type="submit" class="ser"value="Search">
+                                </div>
+                                <div class="col-sm-2 form-group sel">
+                                    
+                                </div>
+                                <div class="col-sm-2 search">
+                                    
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                {% if not date_to_date_sell and request.POST %}
+                    <h2 style="text-align: center;color: red;background: white;">No Data Found </h2>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

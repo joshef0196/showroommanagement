@@ -32,4 +32,13 @@ urlpatterns = [
     path('add-product/', views.add_product),
     path('product-list/', views.product_list),
     path('change-password/', views.change_password),
+    # ................Report.......................
+
+    # ....For branch........
+    path('daily-reports/', views.admin_daily_report),
+    path('monthly-reports/', views.admin_monthly_report),
+    path('yearly-reports/', views.admin_yearly_report),
+    path('daily-report/', views.daily_report),
+    path('monthly-report/', views.monthly_report),
+    path('yearly-report/', views.yearly_report),
 ]

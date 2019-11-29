@@ -8,6 +8,7 @@ from django.contrib.auth.hashers import check_password
 from django.http import HttpResponse, JsonResponse
 import datetime, hashlib, socket, string, os
 from django.conf import settings
+from showroom.utils import render_to_pdf
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.utils.dateparse import parse_date, parse_datetime
@@ -549,3 +550,93 @@ def change_password(request):
             return redirect("/change-password/")
 
     return render(request, "showroom/branch/change_password.html")
+
+# ..............Report.............
+
+# ..........For Branch...........
+    
+def daily_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
+    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    context={
+        'company'      : company,
+        'daliy_report' : daliy_report,
+        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+    }
+
+    pdf = render_to_pdf('showroom/branch/report/daily_report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+    
+def monthly_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
+    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    context={
+        'company'      : company,
+        'daliy_report' : daliy_report,
+        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+    }
+
+    pdf = render_to_pdf('showroom/branch/report/monthly_report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+    
+def yearly_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
+    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    context={
+        'company'      : company,
+        'daliy_report' : daliy_report,
+        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+    }
+
+    pdf = render_to_pdf('showroom/branch/report/yearly_report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+# ...........For Admin............
+
+def admin_daily_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
+    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    context={
+        'company'      : company,
+        'daliy_report' : daliy_report,
+        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+    }
+
+    pdf = render_to_pdf('showroom/admin/report/daily_report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+    
+def admin_monthly_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
+    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    context={
+        'company'      : company,
+        'daliy_report' : daliy_report,
+        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+    }
+
+    pdf = render_to_pdf('showroom/admin/report/monthly_report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+    
+def admin_yearly_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
+    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    context={
+        'company'      : company,
+        'daliy_report' : daliy_report,
+        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+    }
+
+    pdf = render_to_pdf('showroom/admin/report/yearly_report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')

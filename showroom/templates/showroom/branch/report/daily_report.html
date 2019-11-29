@@ -22,12 +22,13 @@
                 <thead>
                     <tr>
                         <th style="width:40px;text-align:center;font-size:9px;padding-top:3px;background-color:#ddd;">SL</th>
-                        <th style="text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;">Product</th>
+                        <th style="text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;">Product Name</th>
                         <th style="text-align:left;font-size:9px;padding-top:3px;padding-left:3px;background-color:#ddd;width:20%;">Payment Type</th>
+                        <th style="text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;">Product Price</th>
                         <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:20%;">Sale Quantity</th>
-                        <th style="text-align:right;font-size:9px;padding-top:3px;background-color:#ddd;width:20%;">Discount</th>
-                        <th style="text-align:right;font-size:9px;padding-top:3px;padding-left:3px;background-color:#ddd;width:20%;">Due Amount</th>
-                        <th style="width:60px;text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;width:200px;">Sale Date</th>
+                        <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:20%;">Discount</th>
+                        <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:10%;">Due Amount</th>
+                        <th style="width:60px;text-align:left;font-size:9px;padding-left:3px;background-color:#ddd;width:20%;">Sale Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,8 +38,13 @@
                                 <td style="text-align:center;font-size:8px;padding-top:3px;width:10%;">{{ forloop.counter }}</td>
                                 <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:20%;"> {{data.product}}</td>
                                 <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:20%;"> {{data.get_payment_type_display}} </td>
+                                {% if data.get_payment_type_display == "Full Payment" %}
+                                    <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:20%;"> {{data.product.unit_price_by_cash}}</td>
+                                {% else %}
+                                    <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:20%;"> {{data.product.unit_price_by_installment}}</td>
+                                {% endif %}
                                 <td style="text-align:center;font-size:8px;padding-top:3px;width:20%;"> {{data.sale_quantity}} </td>
-                                <td style="text-align:right;font-size:8px;padding-right:3px;padding-top:3px;width:40%;"> {{data.discount}}</td>
+                                <td style="text-align:right;font-size:8px;padding-right:3px;padding-top:3px;width:20%;"> {{data.discount}}</td>
                                 <td style="text-align:right;font-size:8px;padding-right:3px;width:30%;padding-left:3px;"> {{ data.due_amount }} </td>
                                 <td style="text-align:left;font-size:8px;padding-top:3px;width:40%;padding-left:3px;"> {{ data.sale_date|date:"M-d-Y" }} </td>
                             </tr>

@@ -1,0 +1,20 @@
+.report_title{
+    width: 100%;
+    height: auto;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background: blue
+}
+.report_left{
+    width: 33%;
+    float: left;
+}
+.report_middle{
+    width: 33%;
+    float: left; 
+}
+.report_right{
+    width: 33%;
+    float: left;
+
+}

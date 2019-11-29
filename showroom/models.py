@@ -76,7 +76,7 @@ class Product(models.Model):
     status                      = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(self.category_name)
+        return self.product_name
 
     class Meta:
         verbose_name        ='Product'
