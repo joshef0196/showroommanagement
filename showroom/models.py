@@ -2,9 +2,29 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from django.utils import timezone
 
+class CompanyInfo(models.Model):
+    com_name         = models.CharField(max_length=150)
+    owner_name       = models.CharField(max_length=100)
+    email            = models.CharField(max_length=50, blank=True)
+    mobile1          = models.CharField(max_length=50, blank=True)
+    mobile2          = models.CharField(max_length=50, blank=True)
+    domain_url       = models.CharField(max_length=100)
+    company_logo     = models.ImageField(upload_to="company_logo/", blank=True)
+    staring_year     = models.IntegerField()
+    address          = models.TextField(max_length=500, blank=True)
+    status           = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.com_name
+
+    class Meta:
+        verbose_name = 'Company'
+        verbose_name_plural = 'Company Information'
+
 class Branches(models.Model):
     branch_name      = models.CharField(max_length=100)
     proprietor_name  = models.CharField(max_length=100)
+    branch_logo      = models.ImageField(upload_to="branch_logo/", blank=True)
     user_name        = models.CharField(max_length=50, blank=True)
     email            = models.CharField(max_length=50, blank=True)
     mobile           = models.CharField(max_length=50, blank=True)
@@ -20,7 +40,20 @@ class Branches(models.Model):
         verbose_name        ='Branch'
         verbose_name_plural ='Branches'
 
+class Area(models.Model): 
+    branch         = models.ForeignKey(Branches, on_delete=models.CASCADE)  
+    area_name      = models.CharField(max_length=100)
+    status         = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.area_name
+
+    class Meta:
+        verbose_name        ='Area'
+        verbose_name_plural ='Areas'
+
 class CustomerRegistration(models.Model):
+    area                  = models.ForeignKey(Area, on_delete=models.CASCADE)
     branch                = models.ForeignKey(Branches, on_delete=models.CASCADE)
     name                  = models.CharField(max_length=50)
     email                 = models.EmailField(max_length=80,blank=True)
@@ -100,7 +133,7 @@ class SaleProducts(models.Model):
     comment                = models.TextField(blank=True)
     next_installment_date  = models.DateTimeField(auto_now_add=False, blank = True, null=True)
     next_installment_amount= models.IntegerField(default=0)
-    sale_date              = models.DateTimeField(auto_now_add=True)
+    sale_date              = models.DateField(auto_now_add = False)
     status                 = models.BooleanField(default=True)
 
     def __str__(self):
@@ -117,7 +150,7 @@ class InstallmentCollection(models.Model):
     product                  = models.ForeignKey(SaleProducts, on_delete=models.CASCADE)
     paid_amount              = models.FloatField(default=0)
     due_date                 = models.DateTimeField(auto_now_add=False)
-    payment_date             = models.DateTimeField(auto_now_add=True)
+    payment_date             = models.DateTimeField(auto_now_add=False)
     status                   = models.BooleanField(default=True)
 
     def __str__(self):
@@ -127,21 +160,4 @@ class InstallmentCollection(models.Model):
         verbose_name        ='Collection'
         verbose_name_plural ='Installment Collections'
 
-class Content(models.Model):
-    branch           = models.ForeignKey(Branches, on_delete=models.CASCADE)
-    com_name         = models.CharField(max_length=150)
-    proprietor_name  = models.CharField(max_length=100)
-    email            = models.CharField(max_length=50, blank=True)
-    mobile1          = models.CharField(max_length=50, blank=True)
-    mobile2          = models.CharField(max_length=50, blank=True)
-    staring_year     = models.IntegerField()
-    address          = models.TextField(max_length=500, blank=True)
-    status           = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.com_name
-
-    class Meta:
-        verbose_name = 'Company'
-        verbose_name_plural = 'Company Information'
 

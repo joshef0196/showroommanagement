@@ -15,13 +15,14 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter     = ['branch','status']
 
 class SaleProductsAdmin(admin.ModelAdmin):
-    list_display    = ['branch','customer','product','payment_type','sale_date','status']
-    list_filter     = ['branch','status']
+    list_display    = ['branch','customer','product','payment_type','next_installment_date','sale_date','status']
+    list_filter     = ['branch','customer_id__area','status']
 
 admin.site.register(models.CustomerRegistration, CustomerRegistrationAdmin)
 admin.site.register(models.ProductCat, ProductCatAdmin)
 admin.site.register(models.Product,ProductAdmin)
 admin.site.register(models.SaleProducts, SaleProductsAdmin)
 admin.site.register(models.InstallmentCollection)
-admin.site.register(models.Content)
+admin.site.register(models.CompanyInfo)
 admin.site.register(models.Branches)
+admin.site.register(models.Area)

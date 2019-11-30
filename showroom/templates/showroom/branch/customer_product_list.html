@@ -23,7 +23,16 @@
                                 <tr>
                                     <td style="text-align:right;vertical-align:middle;">Search</td>
                                     <td>
-                                        <input type="text" id="search" class="form-control" name="search" {% if search %} value="{{ search }}" {% endif %} placeholder = "Customer Name/Mobile/Email/NID/Invoice/Product Name" required>
+                                        <input type="text" id="search" class="form-control" name="search" {% if search %} value="{{ search }}" {% endif %} placeholder = "Customer Name/Mobile/Email/NID/Product Name">
+                                    </td>
+                                    <td style="text-align:right;vertical-align:middle;">Area</td>
+                                    <td>
+                                        <select class="form-control" name = "area_id">
+                                            <option value="0" >Select</option>
+                                            {% for data in area_list %}
+                                                <option value="{{ data.id }}" {% if area_id == data.id %} selected {% endif %}>{{ data.area_name }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </td>
                                     <td>
                                         <input type="submit" class="btn btn-success" value="Search">
@@ -62,9 +71,13 @@
                                         <td style="text-align:right;">{{data.discount}}</td>
                                         <td style="text-align:right;">{{data.due_amount}}</td>
                                         <td style="text-align:right;">{{data.total_price}}</td>
-                                        <td>
-                                            <a href="/edit/{{ data.area_name }}" class="btn btn-info" title="Edit {{data.area_name}}"><i class="fa fa-edit"></i></a>  
-                                        </td>
+                                        {% if data.payment_type == "2" %}
+                                            <td>
+                                                <a href="/{{ data.id }}/installment-details/" class="btn btn-info" title="Pay"><i class="fa fa-dollar"></i></a>  
+                                            </td>
+                                        {% else %}
+                                            <td style="color:green;font-width:bold;">Already Paid</td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                             </tbody>

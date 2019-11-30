@@ -1,5 +1,5 @@
 {% extends 'showroom/branch/base.html' %}
-{% block title %} Add Product {% endblock %}
+{% block title %} Customer Registration {% endblock %}
 {% load staticfiles %}
 {% block contain %}
 <div class="content-wrapper">
@@ -20,13 +20,13 @@
                             <tr>
                                 <th>Customer Name</th>
                                 <td>
-                                    <input type="text" class="form-control" name="customer_name" placeholder="Customer Name" required>
+                                    <input type="text" class="form-control" value="{{ edit_customer.name }}" name="customer_name" placeholder="Customer Name" required>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Email</th>
                                 <td>
-									<input type="email" class="form-control" name="email" placeholder="Email">
+									<input type="email" class="form-control" value="{{ edit_customer.email }}" name="email" placeholder="Email">
                                 </td>
                             </tr>
                             <tr>
@@ -38,19 +38,19 @@
                             <tr>
                                 <th>Phone</th>
                                 <td>
-									<input type="text" class="form-control" name="mobile" placeholder="Phone Number" >
+									<input type="text" class="form-control" value="{{ edit_customer.mobile }}" name="mobile" placeholder="Phone Number" >
                                 </td>
                             </tr>
                             <tr>
                                 <th>Another Phone</th>
                                 <td>
-									<input type="text" class="form-control" name="mobile1" placeholder="Phone Number" >
+									<input type="text" class="form-control" value="{{ edit_customer.mobile1 }}" name="mobile1" placeholder="Phone Number" >
                                 </td>
                             </tr>
                             <tr>
                                 <th>Nid Number</th>
                                 <td>
-									<input type="text" class="form-control" name="nid_number" placeholder="Nid Number" >
+									<input type="text" class="form-control" value="{{ edit_customer.nid_number }}" name="nid_number" placeholder="Nid Number" >
                                 </td>
                             </tr>
                             <tr>
@@ -62,37 +62,47 @@
                             <tr>
                                 <th>Profession</th>
                                 <td>
-									<input type="text" class="form-control" name="profession" placeholder="Profession">
+									<input type="text" class="form-control" value="{{ edit_customer.profession }}" name="profession" placeholder="Profession">
                                 </td>
                             </tr>
                             <tr>
                                 <th>Reference Person</th>
                                 <td>
-									<input type="text" class="form-control" name="reference_person" placeholder="Reference Person" required>
+									<input type="text" class="form-control" value="{{ edit_customer.reference_person }}" name="reference_person" placeholder="Reference Person" required>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Reference Address</th>
                                 <td>
-									<textarea class="form-control" rows="2" name="reference_address" placeholder="reference_address"></textarea>
+									<textarea class="form-control" rows="2" name="reference_address" placeholder="Reference Address"> {{ edit_customer.reference_address }}</textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Reference Mobile</th>
                                 <td>
-									<input type="text" class="form-control" name="reference_mobile" placeholder="Reference Mobile">
+									<input type="text" class="form-control" value="{{ edit_customer.reference_mobile }}" name="reference_mobile" placeholder="Reference Mobile">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Area</th>
+                                <td>
+									<select class="form-control" name = "area_id" required>
+                                        {% for data in area_list %}
+                                            <option value="{{ data.id }}" >{{ data.area_name }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Present Address</th>
                                 <td>
-									<textarea class="form-control" rows="2" name="present_address" placeholder="Present Address"></textarea>
+									<textarea class="form-control" rows="2" name="present_address" placeholder="Present Address">{{ edit_customer.present_address }}</textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Permanent Address</th>
                                 <td>
-									<textarea class="form-control" rows="2" name="permanent_address" placeholder="Permanent Address"></textarea>
+									<textarea class="form-control" rows="2" name="permanent_address" placeholder="Permanent Address">{{ edit_customer.permanent_address }}</textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -108,19 +118,4 @@
 		</div>
     </section>
 </div>
-
-	<script src="{% static 'recycle/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
-	<script>
-		$(function () {
-			$('#datepicker').datepicker({
-				autoclose: true
-			})
-			$('[data-mask]').inputmask()
-			//Timepicker
-			$('.timepicker').timepicker({
-				showInputs: false
-			})
-		})
-    });
-	</script>
 {% endblock %}

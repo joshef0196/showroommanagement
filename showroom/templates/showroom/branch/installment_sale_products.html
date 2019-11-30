@@ -120,7 +120,7 @@
                             <tr>
                                 <th>Next Installment Date</th>
                                 <td>
-									<input type="date" class="form-control pull-right" name="next_installment_date"  placeholder="Next Installment Date" required>
+									<input type="date" class="form-control pull-right" value="{% now "Y-m-d" %}" name="next_installment_date"  placeholder="Next Installment Date" required>
 								</td>
                             </tr>
                             <tr>
@@ -134,6 +134,12 @@
                                 <td>
                                     <input type="number" class="form-control" name="next_installment_amount" placeholder="Next Installment Amount" required>
                                 </td>
+                            </tr>
+                            <tr>
+                                <th>Sale Date</th>
+                                <td>
+									<input type="date" class="form-control pull-right" name="sale_date" value="{% now "Y-m-d" %}" placeholder="Sale Date" required>
+								</td>
                             </tr>
                             <tr>
                                 <th>Discription</th>

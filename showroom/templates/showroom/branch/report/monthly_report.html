@@ -1,6 +1,6 @@
 <html>
      <head>
-         <title>Daily Report</title>
+         <title>Monthly Report</title>
          <meta charset="utf-8" />
      </head>
      
@@ -8,12 +8,22 @@
         <div class='wrapper'> 
             <table style="background-color: #eee;">
                 <tr>
-                    <td style="width:100%;">
-                        <h1 style="margin:0px;text-align:center;padding-top:30px;font-size:24px;">{{company.com_name}}({{company.branch}})</h1>
-                        <h4 style="margin:0px;text-align:center;font-size:12px;">{{ company.address }}</h4>
-                        <h4 style="margin:0px;text-align:center;font-size:12px;">{{ company.email }}</h4>
-                        <h4 style="margin:0px;text-align:center;font-size:12px;">{% if company.mobile1 %}{{ company.mobile1 }}{% endif %}{% if company.mobile2 %}, {{ company.mobile2 }}{% endif %}</h4>
-                        <h4 style="margin:0px;text-align:center;font-size:16px;">Daily Report( {{ currentdate }})</h4>
+                    <td style="width:20%;">
+                        <center>
+                            <img style="height: 80px; width:80px;" src="{{company.domain_url}}/static/showroom/media/{{ branch.branch_logo }}" alt="" >
+                        </center>
+                    </td>
+                    <td style="width:60%;">
+                        <h1 style="margin:0px;text-align:center;padding-top:15px;font-size:18px;">{{branch.branch_name}}</h1>
+                        <h4 style="margin:0px;text-align:center;font-size:14px;">Proprietor:{{branch.proprietor_name}}</h4>
+                        <h4 style="margin:0px;text-align:center;font-size:14px;">{{branch.address}}</h4>
+                        <h4 style="margin:0px;text-align:center;font-size:12px;">{% if branch.mobile %}{{ branch.mobile }}{% endif %}{% if branch.email %}, {{ branch.email }}{% endif %}</h4>
+                        <h4 style="margin:0px;text-align:center;padding-bottom:7px;font-size:16px;"><u>Monthly Sales Report of {% now "F-Y" %} </u></h4>
+                    </td>
+                    <td style="width:20%;">
+                        <center>
+                            <img style="height: 80px; width:80px;" src="{{company.domain_url}}/static/showroom/media/{{ company.company_logo }}" alt="" >
+                        </center>
                     </td>
                 </tr>
             </table>
@@ -22,22 +32,22 @@
                 <thead>
                     <tr>
                         <th style="width:40px;text-align:center;font-size:9px;padding-top:3px;background-color:#ddd;">SL</th>
-                        <th style="text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;">Product</th>
-                        <th style="text-align:left;font-size:9px;padding-top:3px;padding-left:3px;background-color:#ddd;width:20%;">Payment Type</th>
-                        <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:20%;">Sale Quantity</th>
+                        <th style="text-align:left;font-size:9px;padding-left:3px;padding-top:3px;background-color:#ddd;">Product Name</th>
+                        <th style="text-align:left;font-size:9px;padding-top:3px;padding-left:3px;background-color:#ddd;width:20%;">Bill Type</th>
+                        <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:20%;">Sale Qty</th>
                         <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:20%;">Discount</th>
                         <th style="text-align:right;font-size:9px;padding-top:3px;padding-right:3px;background-color:#ddd;width:20%;">Due Amount</th>
                         <th style="width:60px;text-align:left;font-size:9px;padding-left:3px;background-color:#ddd;width:20%;">Sale Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if daliy_report %}
-                        {% for data in daliy_report %}
+                    {% if monthly_report %}
+                        {% for data in monthly_report %}
                             <tr class="gradeX odd" role="row">
                                 <td style="text-align:center;font-size:8px;padding-top:3px;width:10%;">{{ forloop.counter }}</td>
                                 <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:20%;"> {{data.product}}</td>
                                 <td style="text-align:left;font-size:8px;padding-left:3px;padding-top:3px;width:20%;"> {{data.get_payment_type_display}} </td>
-                                <td style="text-align:center;font-size:8px;padding-top:3px;width:20%;"> {{data.sale_quantity}} </td>
+                                <td style="text-align:right;font-size:8px;padding-top:3px;padding-right:3px;width:20%;"> {{data.sale_quantity}} </td>
                                 <td style="text-align:right;font-size:8px;padding-right:3px;padding-top:3px;width:40%;"> {{data.discount}}</td>
                                 <td style="text-align:right;font-size:8px;padding-right:3px;width:30%;padding-left:3px;"> {{ data.due_amount }} </td>
                                 <td style="text-align:left;font-size:8px;padding-top:3px;width:40%;padding-left:3px;"> {{ data.sale_date|date:"M-d-Y" }} </td>

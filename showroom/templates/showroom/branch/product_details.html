@@ -1,0 +1,68 @@
+{% extends 'showroom/branch/base.html' %}
+{% block title %} Product Details {% endblock %}
+{% load staticfiles %}
+{% load mathfilters %}
+{% block contain %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+      	<div class="row">
+			<div class="col-xs-6">
+				<div class="box">
+                    {% if messages %}
+						{% for message in messages %}
+							<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+								{% if message.tags %} <h4>{{ message }}</h4>{% endif %}
+							</div>
+						{% endfor %}
+					{% endif %}
+					
+					<div class="box-body" style="overflow-x:auto;">
+                        {% if product.product_image %}
+                            <img src="/static/showroom/media/{{ product.product_image }}" class="profile-user-img img-responsive" alt="{{ product.product_image }}">
+                        {% else %}
+                            <img src="{% static 'showroom/admin/img/userimage.jpg' %}" class="profile-user-img img-responsive img-circle" alt="No Image">
+                        {% endif %} 
+						<table id="product_tbl" class="table table-bordered table-hover">
+							<tdead>
+                                <tr style="font-size:13px;">
+                                    <td style="text-align:right;">Category</td> <td> {{ product.category_name.category_name }} </td>
+                                </tr>
+                                <tr style="font-size:13px;">
+                                    <td style="text-align:right;">Product Name</td> <td> {{ product.product_name }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">  
+                                    <td style="text-align:right;">Brand Name</td> <td> {{ product.brand_name }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">  
+                                    <td style="text-align:right;">Product Model Number</td> <td> {{ product.product_model_number }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">
+                                    <td style="text-align:right;">Product Color</td> <td> {{ product.product_color }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Available Quantity</td> <td> {{ product.available_quantity }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Total Quantity</td> <td> {{ product.total_quantity }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Unit Price By Cash</td> <td> {{ product.unit_price_by_cash }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Buy Price</td> <td> {{ product.buy_price }} </td>
+                                </tr>  
+                                <tr style="font-size:13px;">    
+                                    <td style="text-align:right;">Discription</td> <td> {{ product.discription }} </td>
+                                </tr>  
+                            </tdead>
+						</table>
+					</div>
+				</div>
+			</div>
+    	</div>
+	</section>
+</div>
+
+{% endblock %}

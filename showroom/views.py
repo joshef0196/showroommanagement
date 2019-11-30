@@ -125,7 +125,7 @@ def branch_login(request):
     brance = models.Branches.objects.filter(status = True)
     context = {
         'brance' : brance,
-    }
+    } 
     if request.method=="POST":
         username  = request.POST['username']
         password  = request.POST['password']
@@ -137,6 +137,7 @@ def branch_login(request):
             request.session['id'] = user[0].id
             request.session['proprietor_name'] = user[0].proprietor_name
             request.session['branch_name'] = user[0].branch_name
+            request.session['branch_logo'] = str(user[0].branch_logo)
             return redirect("/my-dashboard/")
         else:
             messages.error(request,'* Username and Password incorrect.')
@@ -162,7 +163,9 @@ def cash_selling_product(request):
         total_price          = request.POST['total_price']
         discription          = request.POST['discription']
         unit_price_cash      = request.POST['unit_price_cash']
-        
+        sale_date            = request.POST['sale_date']
+        sale_date            = parse_date(str(sale_date))
+
         product = models.Product.objects.filter(id = product_id, status = True) 
         if product and product[0].available_quantity > 0:
             last_product = models.SaleProducts.objects.filter(branch_id = int(request.session['id'])).last()
@@ -171,7 +174,7 @@ def cash_selling_product(request):
 
             models.SaleProducts.objects.create(
                 invoice = last_invoice, branch_id = request.session['id'], customer_id = customer_id, product_id = product_id, sale_quantity = sale_quantity, sale_unit_price = unit_price_cash, 
-                discount = given_discount, total_price = total_price, comment = discription, payment_type = "1")
+                discount = given_discount, total_price = total_price, comment = discription, payment_type = "1", sale_date = sale_date)
             
             product.update(available_quantity = F('available_quantity') - sale_quantity)
             messages.success(request,"Product successfully added")
@@ -208,7 +211,9 @@ def installment_selling_product(request):
         discription               = request.POST['discription']
         unit_price_installment    = request.POST['unit_price_by_installment']
         next_installment_amount   = request.POST['next_installment_amount']
-        next_installment_date    = parse_date(str(next_installment_date))
+        sale_date                 = request.POST['sale_date']
+        next_installment_date     = parse_date(str(next_installment_date))
+        sale_date                 = parse_date(str(sale_date))
 
         
         product = models.Product.objects.filter(id = product_id, status = True) 
@@ -227,7 +232,7 @@ def installment_selling_product(request):
             models.SaleProducts.objects.create(
                 invoice = last_invoice, branch_id = request.session['id'], customer_id = customer_id, product_id = product_id, sale_quantity = sale_quantity, sale_unit_price = unit_price_installment, 
                 discount = given_discount, total_price = total_price, comment = discription, payment_type = "2", due_amount = due_amount,
-                next_installment_date = next_installment_date, next_installment_amount = next_installment_amount )
+                next_installment_date = next_installment_date, next_installment_amount = next_installment_amount, sale_date = sale_date )
             
             product.update(available_quantity = F('available_quantity') - sale_quantity)
             models.InstallmentCollection.objects.create(invoice = installment_invoice, branch_id = request.session['id'], customer_id = customer_id, product_id = product_id,
@@ -271,7 +276,7 @@ def sold_product_list(request):
 def customer_product_list(request):
     if not request.session['id']:
         return redirect('/login/')
-
+    area_list    = models.Area.objects.filter(branch_id = int(request.session['id']), status = True).order_by("-id")
     if request.is_ajax():
         search_by = (request.GET.get('search')).strip()
         product_list = models.SaleProducts.objects.values("product_id__category_name_id__category_name", "product_id__product_name","customer_id__name", "customer_id__mobile","sale_quantity","sale_unit_price","discount","total_price").filter(Q(customer_id__name__icontains = search_by)|Q(customer_id__email__icontains = search_by)|Q(customer_id__mobile__icontains = search_by)|Q(customer_id__mobile1__icontains = search_by)|Q(product_id__product_name__icontains = search_by), branch_id = int(request.session['id']), status = True).order_by("-id")
@@ -280,16 +285,26 @@ def customer_product_list(request):
 
     elif request.method=="POST":   
         search_by = (request.POST['search']).strip()
-        product_list = models.SaleProducts.objects.filter(Q(customer_id__name__icontains = search_by)|Q(customer_id__email__icontains = search_by)|Q(customer_id__mobile__icontains = search_by)|Q(customer_id__mobile1__icontains = search_by)|Q(product_id__product_name__icontains = search_by)|Q(invoice = search_by), branch_id = int(request.session['id']), status = True).order_by("-id")
+        area_id   = int(request.POST['area_id'])
+
+        if area_id == 0 and len(str(search_by)) > 0:
+            product_list = models.SaleProducts.objects.filter(Q(customer_id__name__icontains = search_by)|Q(customer_id__email__icontains = search_by)|Q(customer_id__mobile__icontains = search_by)|Q(customer_id__mobile1__icontains = search_by)|Q(product_id__product_name__icontains = search_by), branch_id = int(request.session['id']), status = True).order_by("-id")
+        # elif area_id != 0 and len(str(search_by)) > 0:
+        #     product_list = models.SaleProducts.objects.filter((Q(customer_id__area_id = area_id) & Q(branch_id = int(request.session['id'])) & Q(status = True))|(Q(customer_id__name__icontains = search_by)|Q(customer_id__email__icontains = search_by)|Q(customer_id__mobile__icontains = search_by)|Q(customer_id__mobile1__icontains = search_by)|Q(product_id__product_name__icontains = search_by) & Q(branch_id = int(request.session['id'])) & Q(status = True))).order_by("-id")
+        else:
+            product_list = models.SaleProducts.objects.filter(customer_id__area_id = area_id, branch_id = int(request.session['id']), status = True).order_by("-id")
         context = {
             'product_list' : product_list,
             'search' : search_by,
+            'area_list' : area_list,
+            'area_id' : area_id,
         }
         return render(request,"showroom/branch/customer_product_list.html",context)
     else:    
         product_list = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True).order_by("-id")[:50]
         context = {
             'product_list' : product_list,
+            'area_list' : area_list,
         }
         return render(request,"showroom/branch/customer_product_list.html",context)
 
@@ -299,14 +314,14 @@ def installment_collection(request):
 
     if request.method=="POST":   
         search_by = (request.POST['search']).strip()
-        product_list = models.SaleProducts.objects.filter(Q(customer_id__name__icontains = search_by)|Q(customer_id__email__icontains = search_by)|Q(customer_id__mobile__icontains = search_by)|Q(customer_id__mobile1__icontains = search_by)|Q(product_id__product_name__icontains = search_by), branch_id = int(request.session['id']), status = True).order_by("-id")
+        product_list = models.SaleProducts.objects.filter(Q(customer_id__name__icontains = search_by)|Q(customer_id__email__icontains = search_by)|Q(customer_id__mobile__icontains = search_by)|Q(customer_id__mobile1__icontains = search_by)|Q(product_id__product_name__icontains = search_by), branch_id = int(request.session['id']), due_amount__gt = 0, payment_type = "2", status = True).order_by("-id")
         context = {
             'product_list' : product_list,
             'search' : search_by,
         }
         return render(request,"showroom/branch/installment_collection.html",context)
     else:    
-        product_list = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True).order_by("-id")[:50]
+        product_list = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), due_amount__gt = 0, payment_type = "2", status = True).order_by("next_installment_date")[:50]
         context = {
             'product_list' : product_list,
         }
@@ -316,33 +331,48 @@ def installment_details(request, id):
     if not request.session['id']:
         return redirect('/login/')
 
-    product = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), id = id).first()
+    product = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), id = id)
     if request.method=="POST":   
         installment_amount = float(request.POST['installment_amount'])
         next_installment_date = parse_date(request.POST['next_installment_date'])
+        collection_date = parse_date(request.POST['collection_date'])
         
         last_installment = models.InstallmentCollection.objects.filter(branch_id = int(request.session['id'])).last()
         if last_installment:
             installment_invoice =  last_installment.invoice + 1
         else: 
             installment_invoice =  1001
+        if product and product[0].due_amount > 0:
+            models.SaleProducts.objects.filter(branch_id = int(request.session['id']), id = id).update(due_amount = F("due_amount") - installment_amount, next_installment_amount = installment_amount, next_installment_date = next_installment_date)
+            product = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), id = id)
+            if product[0].due_amount <= 0:
+                product.update(due_amount = 0, next_installment_date = None)
+            models.InstallmentCollection.objects.create(invoice = installment_invoice, branch_id = request.session['id'], customer_id = product[0].customer_id, product_id = product[0].id,
+                paid_amount = installment_amount, due_date = next_installment_date, payment_date = collection_date)
+            return redirect("/installment-collection/") 
 
-        models.SaleProducts.objects.filter(branch_id = int(request.session['id']), id = id).update(due_amount = F("due_amount") - installment_amount, next_installment_amount = installment_amount, next_installment_date = next_installment_date)
-        models.InstallmentCollection.objects.create(invoice = installment_invoice, branch_id = request.session['id'], customer_id = product.customer_id, product_id = product.product_id,
-                paid_amount = installment_amount, due_date = next_installment_date)
-        context = {
-            'product_list' : product_list,
-            'search' : search_by,
-        }
-        return render(request,"showroom/branch/installment_details.html",context)
+        elif product and product[0].due_amount <= 0:
+            product.update(due_amount = 0, next_installment_date = None)
+            return redirect(request.path) 
+        else:
+            return redirect("/installment-collection/")     
     else:    
         if product:
             context = {
-                'product' : product,
+                'product' : product[0],
             }
             return render(request,"showroom/branch/installment_details.html",context)
         else:
             return redirect("/installment-collection/")    
+
+def installment_list(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    installment_list = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), payment_type = 2, status = True)
+    context = {
+        'installment_list' : installment_list,
+    }
+    return render(request, 'showroom/branch/installment_list.html', context)
 
 def load_category_product(request):
     product_list = models.Product.objects.filter(branch_id = int(request.session['id']), category_name_id = int(request.GET.get('category_id')), available_quantity__gt = 0).order_by("product_name")
@@ -359,8 +389,10 @@ def customer_reg(request):
         return redirect('/login/')
 
     brance = models.Branches.objects.filter(status = True)
+    area_list = models.Area.objects.filter(status = True)
     context = {
         'brance' : brance,
+        'area_list' : area_list,
     }
     if request.method=="POST":
         customer_name               = request.POST['customer_name']
@@ -374,6 +406,7 @@ def customer_reg(request):
         reference_mobile            = request.POST['reference_mobile']
         present_address             = request.POST['present_address']
         permanent_address           = request.POST['permanent_address']
+        area_id                     = int(request.POST['area_id'])
 
         order_file1 = ""
         if bool(request.FILES.get('customer_image', False)) == True:
@@ -393,7 +426,7 @@ def customer_reg(request):
             default_storage.save(settings.MEDIA_ROOT+"nid_image/"+file.name, ContentFile(file.read()))
         
         if models.CustomerRegistration.objects.create(
-            branch_id = request.session['id'], name = customer_name, email = email, mobile = mobile, mobile1 = mobile1, nid_number = nid_number, customer_image = order_file1, nid_image = order_file2, present_address = present_address,
+            branch_id = request.session['id'], area_id = area_id, name = customer_name, email = email, mobile = mobile, mobile1 = mobile1, nid_number = nid_number, customer_image = order_file1, nid_image = order_file2, present_address = present_address,
             permanent_address = permanent_address, profession = profession, reference_person = reference_person, reference_address = reference_address, reference_mobile = reference_mobile
             ):
             messages.success(request,'Registration successfully!')
@@ -403,6 +436,61 @@ def customer_reg(request):
             return redirect("/customer-registration/")
 
     return render(request, 'showroom/branch/customer_reg.html', context)
+
+def edit_customer(request, id):
+    if not request.session['id']:
+        return redirect('/login/')
+
+    brance        = models.Branches.objects.filter(status = True)
+    area_list     = models.Area.objects.filter(status = True)
+    edit_customer = models.CustomerRegistration.objects.filter(id = id, status = True).first()
+    context = {
+        'brance' : brance,
+        'area_list' : area_list,
+        'edit_customer' : edit_customer,
+    }
+    if request.method=="POST":
+        customer_name               = request.POST['customer_name']
+        email                       = request.POST['email']
+        mobile                      = request.POST['mobile']
+        mobile1                     = request.POST['mobile1']
+        nid_number                  = request.POST['nid_number']
+        profession                  = request.POST['profession']
+        reference_person            = request.POST['reference_person']
+        reference_address           = request.POST['reference_address']
+        reference_mobile            = request.POST['reference_mobile']
+        present_address             = request.POST['present_address']
+        permanent_address           = request.POST['permanent_address']
+        area_id                     = int(request.POST['area_id'])
+
+        order_file1 = ""
+        if bool(request.FILES.get('customer_image', False)) == True:
+            file = request.FILES['customer_image']
+            order_file1 = "customer_image/"+file.name
+            if not os.path.exists(settings.MEDIA_ROOT+"customer_image/"):
+                os.mkdir(settings.MEDIA_ROOT+"customer_image/")
+            default_storage.save(settings.MEDIA_ROOT+"customer_image/"+file.name, ContentFile(file.read()))
+        
+
+        order_file2 = ""
+        if bool(request.FILES.get('nid_image', False)) == True:
+            file = request.FILES['nid_image']
+            order_file2 = "nid_image/"+file.name
+            if not os.path.exists(settings.MEDIA_ROOT+"nid_image/"):
+                os.mkdir(settings.MEDIA_ROOT+"nid_image/")
+            default_storage.save(settings.MEDIA_ROOT+"nid_image/"+file.name, ContentFile(file.read()))
+        
+        if models.CustomerRegistration.objects.filter(id = id).update(
+            branch_id = request.session['id'], area_id = area_id, name = customer_name, email = email, mobile = mobile, mobile1 = mobile1, nid_number = nid_number, customer_image = order_file1, nid_image = order_file2, present_address = present_address,
+            permanent_address = permanent_address, profession = profession, reference_person = reference_person, reference_address = reference_address, reference_mobile = reference_mobile
+            ):
+            messages.success(request,'Successfully updated.')
+            return redirect("/customer-list/")
+        else:
+            messages.error(request,"Please enter a valid value") 
+            return redirect("/customer-registration/")
+
+    return render(request, 'showroom/branch/edit_customer.html', context)
 
 def customer_list(request):
     if not request.session['id']:
@@ -432,6 +520,56 @@ def add_product_cat(request):
             return redirect("/add-category/")
 
     return render(request,"showroom/branch/add_product_cat.html",context)
+
+def add_area(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    if request.method=="POST":
+        area_name   = request.POST['area_name']
+        chack_cat = models.Area.objects.filter(area_name = area_name)
+        if not chack_cat:
+            models.Area.objects.create(branch_id = int(request.session['id']), area_name = area_name)
+            messages.success(request,'Area setup successfully!')
+            return redirect("/add-area/")
+        else:
+            messages.error(request,"Already added this name. ") 
+            return redirect("/add-area/")
+
+    return render(request,"showroom/branch/area_add.html")
+
+def area_list(request):
+    if not request.session['id']:
+        return redirect('/login/')
+
+    area_list      = models.Area.objects.filter(branch_id = int(request.session['id']), status = True)
+    context={
+        'area_list' : area_list,
+    }
+    return render(request, "showroom/branch/area_list.html", context)
+
+def edit_area(request, id):
+    if not request.session['id']:
+        return redirect('/login/')
+
+    edit_area        = models.Area.objects.filter(branch_id = int(request.session['id']), id = id).first()
+    branch           = models.Branches.objects.filter(status = True).exclude(id = edit_area.branch_id)
+    context={
+        'edit_area' : edit_area,
+        'branch' : branch,
+    }
+    if request.method=="POST":
+        area_name   = request.POST['area_name']
+
+        chack_cat = models.Area.objects.filter(branch_id = int(request.session['id']), area_name = area_name)
+        if not chack_cat:
+            models.Area.objects.filter(id = id).update(branch_id = int(request.session['id']), area_name = area_name)
+            messages.success(request,'Successfully updated.')
+            return redirect("/area-list/")
+        else:
+            messages.error(request,"Already added this name.")
+            return redirect("/area-list/")
+
+    return render(request,"showroom/branch/edit_area.html",context)
 
 def edit_product_cat(request, id):
     if not request.session['id']:
@@ -528,6 +666,44 @@ def product_list(request):
     }
     return render(request, "showroom/branch/product_list.html", context)
 
+def product_details(request, id):
+    if not request.session['id']:
+        return redirect('/login/')
+    product      = models.Product.objects.filter(branch_id = int(request.session['id']), id = id).first()
+    context={
+        'product' : product,
+    }
+    return render(request, "showroom/branch/product_details.html", context)
+
+def customer_details(request, id):
+    if not request.session['id']:
+        return redirect('/login/')
+    customer_details      = models.CustomerRegistration.objects.filter(branch_id = int(request.session['id']), id = id).first()
+    context={
+        'customer_details' : customer_details,
+    }
+    return render(request, "showroom/branch/customer_details.html", context)
+
+def unpaid_list(request):
+    if not request.session['id']:
+        return redirect('/login/')
+
+    product_list   = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), due_amount__gt = 0)
+    context={
+        'product_list' : product_list,
+    }
+    return render(request, "showroom/branch/unpaid_list.html", context)
+
+def dateover_due_list(request):
+    if not request.session['id']:
+        return redirect('/login/')
+
+    product_list   = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), next_installment_date__lt = datetime.datetime.now().date(), due_amount__gt = 0)
+    context={
+        'product_list' : product_list,
+    }
+    return render(request, "showroom/branch/dateover_due_list.html", context)
+
 def change_password(request):
     if not request.session['id']:
         return redirect('/login/')
@@ -558,12 +734,13 @@ def change_password(request):
 def daily_report(request):
     if not request.session['id']:
         return redirect('/login/')
-    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
-    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    company               = models.CompanyInfo.objects.filter(status = True).first()
+    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), sale_date = datetime.datetime.strftime(datetime.datetime.now().date(),"%Y-%m-%d"), status = True)
     context={
         'company'      : company,
         'daliy_report' : daliy_report,
-        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+        'branch' : models.Branches.objects.filter(id = int(request.session['id']), status = True).first(),
+        
     }
 
     pdf = render_to_pdf('showroom/branch/report/daily_report.html', context)
@@ -572,12 +749,12 @@ def daily_report(request):
 def monthly_report(request):
     if not request.session['id']:
         return redirect('/login/')
-    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
-    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    company               = models.CompanyInfo.objects.filter(status = True).first()
+    monthly_report        = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), sale_date__month = datetime.datetime.now().month, status = True)
     context={
-        'company'      : company,
-        'daliy_report' : daliy_report,
-        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+        'company'        : company,
+        'monthly_report' : monthly_report,
+        'branch' : models.Branches.objects.filter(id = int(request.session['id']), status = True).first(),
     }
 
     pdf = render_to_pdf('showroom/branch/report/monthly_report.html', context)
@@ -586,56 +763,106 @@ def monthly_report(request):
 def yearly_report(request):
     if not request.session['id']:
         return redirect('/login/')
-    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
-    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    company               = models.CompanyInfo.objects.filter(status = True).first()
+    yearly_report         = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), sale_date__year = datetime.datetime.now().year, status = True)
     context={
-        'company'      : company,
-        'daliy_report' : daliy_report,
-        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
+        'company'       : company,
+        'yearly_report' : yearly_report,
+        'branch' : models.Branches.objects.filter(id = int(request.session['id']), status = True).first(),
     }
 
     pdf = render_to_pdf('showroom/branch/report/yearly_report.html', context)
     return HttpResponse(pdf, content_type='application/pdf')
+    
+def unpaid_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    company               = models.CompanyInfo.objects.filter(status = True).first()
+    unpaid_report         = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), next_installment_date__gte = datetime.datetime.strftime(datetime.datetime.now().date(),"%Y-%m-%d"), payment_type = "2", status = True)    
+    context={
+        'company'       : company,
+        'unpaid_report' : unpaid_report,
+        'branch' : models.Branches.objects.filter(id = int(request.session['id']), status = True).first(),
+    }
+    pdf = render_to_pdf('showroom/branch/report/unpaid_report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+    
+def dateover_due_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+    company               = models.CompanyInfo.objects.filter(status = True).first()
+    dateover_due_report   = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), next_installment_date__lt = datetime.datetime.strftime(datetime.datetime.now().date(),"%Y-%m-%d"), payment_type = "2" , status = True)
+    context={
+        'company'       : company,
+        'dateover_due_report' : dateover_due_report,
+        'branch' : models.Branches.objects.filter(id = int(request.session['id']), status = True).first(),
+    }
+
+    pdf = render_to_pdf('showroom/branch/report/dateover_due_report.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+def date_to_date_report(request):
+    if not request.session['id']:
+        return redirect('/login/')
+
+    company  = models.CompanyInfo.objects.filter(status = True).first()
+    if request.method == "POST":
+        from_date = parse_date(request.POST['from_date'])
+        to_date   = parse_date(request.POST['to_date'])
+
+        date_to_date_sell  = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), sale_date__gte = from_date, sale_date__lte = to_date, status = True )
+        context = {
+            'company' : company,
+            'from_date' : from_date,
+            'to_date' : to_date,
+            'date_to_date_sell' : date_to_date_sell,
+            'branch' : models.Branches.objects.filter(id = int(request.session['id']), status = True).first(),
+        }
+
+        if date_to_date_sell:
+            pdf = render_to_pdf('showroom/branch/report/date_wise_report.html', context)
+            return HttpResponse(pdf, content_type='application/pdf')
+        else:    
+            return render(request,'showroom/branch/report/date_wise_form.html', context)
+
+    return render(request,'showroom/branch/report/date_wise_form.html', {"company" : company})
 
 # ...........For Admin............
 
 def admin_daily_report(request):
-    if not request.session['id']:
-        return redirect('/login/')
-    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
-    daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
+    if not request.session['usertype'] == "admin":
+        return redirect('/')
+    company               = models.CompanyInfo.objects.filter(status = True).first()
+    daliy_report          = models.SaleProducts.objects.filter(status = True)
     context={
         'company'      : company,
         'daliy_report' : daliy_report,
-        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
     }
 
     pdf = render_to_pdf('showroom/admin/report/daily_report.html', context)
     return HttpResponse(pdf, content_type='application/pdf')
     
 def admin_monthly_report(request):
-    if not request.session['id']:
-        return redirect('/login/')
-    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
+    if not request.session['usertype'] == "admin":
+        return redirect('/')
+    company               = models.CompanyInfo.objects.filter(status = True).first()
     daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
     context={
         'company'      : company,
         'daliy_report' : daliy_report,
-        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
     }
 
     pdf = render_to_pdf('showroom/admin/report/monthly_report.html', context)
     return HttpResponse(pdf, content_type='application/pdf')
     
 def admin_yearly_report(request):
-    if not request.session['id']:
-        return redirect('/login/')
-    company               = models.Content.objects.filter(branch_id = int(request.session['id']), status = True).first()
+    if not request.session['usertype'] == "admin":
+        return redirect('/')
+    company               = models.CompanyInfo.objects.filter(status = True).first()
     daliy_report          = models.SaleProducts.objects.filter(branch_id = int(request.session['id']), status = True)
     context={
         'company'      : company,
         'daliy_report' : daliy_report,
-        'currentdate'  : datetime.datetime.strftime(datetime.datetime.now(), '%d-%B')
     }
 
     pdf = render_to_pdf('showroom/admin/report/yearly_report.html', context)

@@ -45,6 +45,7 @@
                                     <th style="text-align:right;">Disc.</th>
                                     <th style="text-align:right;">Due</th>
                                     <th style="text-align:right;">Total Price</th>
+                                    <th style="text-align:right;">Installment Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -62,6 +63,7 @@
                                         <td style="text-align:right;">{{data.discount}}</td>
                                         <td style="text-align:right;">{{data.due_amount}}</td>
                                         <td style="text-align:right;">{{data.total_price}}</td>
+                                        <td style="text-align:right;">{{data.next_installment_date|date:"M.d, Y"}}</td>
                                         <td>
                                             <a href="/{{ data.id }}/installment-details/" class="btn btn-info" title="Pay"><i class="fa fa-dollar"></i></a>  
                                         </td>

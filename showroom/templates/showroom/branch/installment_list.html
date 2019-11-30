@@ -1,5 +1,5 @@
 {% extends 'showroom/branch/base.html' %}
-{% block title %} Sold Product List {% endblock %}
+{% block title %} Installment List {% endblock %}
 {% load staticfiles %}
 {% block contain %}
 
@@ -17,24 +17,8 @@
 						{% endfor %}
 					{% endif %}
 					
-					<div class="box-body" style="overflow-x:auto;">
-                        <form role="form" method="POST"> {% csrf_token %}
-                            <table id="example1" class="table table-bordered table-hover">
-                                <tr>
-                                    <td>Selling Type</td>
-                                    <td>
-                                        <select name="payment_type" class="form-control select" id="payment_type" required> 
-                                            <option {% if payment_type == "1" %} selected {% endif %} value="1">Full Payment</option>
-                                            <option {% if payment_type == "2" %} selected {% endif %} value="2">Installment</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="submit" value="Search" class="btn btn-success">
-                                    </td>
-                                </tr>
-                            </table>   
-                        </form> 
-                        {% if product_list %}
+					<div class="box-body" style="overflow-x:auto;"> 
+                        {% if installment_list %}
                             <table id="example1" class="table table-bordered table-hover">
                                 <thead>
                                     <tr style="font-size:13px;">
@@ -50,7 +34,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for data in product_list %}
+                                    {% for data in installment_list %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
                                             <td>{{data.product.category_name}}</td>
@@ -60,19 +44,15 @@
                                             <td style="text-align:right;">{{data.sale_unit_price}}</td>
                                             <td style="text-align:right;">{{data.discount}}</td>
                                             <td style="text-align:right;">{{data.total_price}}</td>
-                                            {% if data.payment_type == "2" %}
-                                                <td>
-                                                    <a href="/{{ data.id }}/installment-details/" class="btn btn-info" title="Pay"><i class="fa fa-dollar"></i></a>  
-                                                </td>
-                                            {% else %}
-                                                <td style="color:green;font-width:bold;">Already Paid</td>
-                                            {% endif %}
+                                            <td>
+                                                <a href="/{{ data.id }}/installment-details/" class="btn btn-info" title="Pay"><i class="fa fa-dollar"></i></a>  
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
-                        {% elif not product_list and request.POST %}
-                            <h2 style="color:red;text-align:center;">Not Found </h2>
+                            {% elif not product_list and request.POST %}
+                                <h2 style="color:red;text-align:center;">Not Found </h2>
                         {% endif %}
 					</div>
 				</div>

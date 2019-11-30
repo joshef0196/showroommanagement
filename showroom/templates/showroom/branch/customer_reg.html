@@ -1,5 +1,5 @@
 {% extends 'showroom/branch/base.html' %}
-{% block title %} Add Product {% endblock %}
+{% block title %}Edit Customer Registration {% endblock %}
 {% load staticfiles %}
 {% block contain %}
 <div class="content-wrapper">
@@ -84,6 +84,16 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th>Area</th>
+                                <td>
+									<select class="form-control" name = "area_id" required>
+                                        {% for data in area_list %}
+                                            <option value="{{ data.id }}" >{{ data.area_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>Present Address</th>
                                 <td>
 									<textarea class="form-control" rows="2" name="present_address" placeholder="Present Address"></textarea>
@@ -108,19 +118,4 @@
 		</div>
     </section>
 </div>
-
-	<script src="{% static 'recycle/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
-	<script>
-		$(function () {
-			$('#datepicker').datepicker({
-				autoclose: true
-			})
-			$('[data-mask]').inputmask()
-			//Timepicker
-			$('.timepicker').timepicker({
-				showInputs: false
-			})
-		})
-    });
-	</script>
 {% endblock %}

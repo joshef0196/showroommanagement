@@ -1,5 +1,5 @@
 {% extends 'showroom/branch/base.html' %}
-{% block title %} Sold Product List {% endblock %}
+{% block title %} Unpaid Due List {% endblock %}
 {% load staticfiles %}
 {% block contain %}
 
@@ -17,23 +17,7 @@
 						{% endfor %}
 					{% endif %}
 					
-					<div class="box-body" style="overflow-x:auto;">
-                        <form role="form" method="POST"> {% csrf_token %}
-                            <table id="example1" class="table table-bordered table-hover">
-                                <tr>
-                                    <td>Selling Type</td>
-                                    <td>
-                                        <select name="payment_type" class="form-control select" id="payment_type" required> 
-                                            <option {% if payment_type == "1" %} selected {% endif %} value="1">Full Payment</option>
-                                            <option {% if payment_type == "2" %} selected {% endif %} value="2">Installment</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="submit" value="Search" class="btn btn-success">
-                                    </td>
-                                </tr>
-                            </table>   
-                        </form> 
+					<div class="box-body" style="overflow-x:auto;"> 
                         {% if product_list %}
                             <table id="example1" class="table table-bordered table-hover">
                                 <thead>
@@ -42,9 +26,10 @@
                                         <th>Category Name</th>
                                         <th>Product Name</th>
                                         <th>Customer</th>
-                                        <th style="text-align:center">Qty</th>
-                                        <th style="text-align:right;">Unit Price</th>
+                                        <th style="width:10%;">Next Install. Date</th>
+                                        <th style="text-align:right;width:10%;">Next Install. Amount</th>
                                         <th style="text-align:right;">Disc.</th>
+                                        <th style="text-align:right;">Due</th>
                                         <th style="text-align:right;">Total</th>
                                         <th>Action</th>
                                     </tr>
@@ -56,23 +41,20 @@
                                             <td>{{data.product.category_name}}</td>
                                             <td>{{data.product.product_name}}</td>
                                             <td>{{data.customer}}</td>
-                                            <td style="text-align:center">{{data.sale_quantity}}</td>
-                                            <td style="text-align:right;">{{data.sale_unit_price}}</td>
+                                            <td>{{data.next_installment_date|date:"d, M Y"}}</td>
+                                            <td style="text-align:right;">{{data.next_installment_amount}}</td>
                                             <td style="text-align:right;">{{data.discount}}</td>
+                                            <td style="text-align:right;">{{data.due_amount}}</td>
                                             <td style="text-align:right;">{{data.total_price}}</td>
-                                            {% if data.payment_type == "2" %}
-                                                <td>
-                                                    <a href="/{{ data.id }}/installment-details/" class="btn btn-info" title="Pay"><i class="fa fa-dollar"></i></a>  
-                                                </td>
-                                            {% else %}
-                                                <td style="color:green;font-width:bold;">Already Paid</td>
-                                            {% endif %}
+                                            <td>
+                                                <a href="/{{ data.id }}/installment-details/" class="btn btn-info" title="Pay"><i class="fa fa-dollar"></i></a>  
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
-                        {% elif not product_list and request.POST %}
-                            <h2 style="color:red;text-align:center;">Not Found </h2>
+                            {% elif not product_list and request.POST %}
+                                <h2 style="color:red;text-align:center;">Not Found </h2>
                         {% endif %}
 					</div>
 				</div>

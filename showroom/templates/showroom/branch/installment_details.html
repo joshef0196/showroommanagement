@@ -48,7 +48,7 @@
                                     <td style="text-align:right;">Discount</td> <td> {{ product.discount }} </td>
                                  </tr>  
                                  <tr style="font-size:13px;">    
-                                    <td style="text-align:right;">Due</td> <td> {{ product.due_amount }} </td>
+                                    <td style="text-align:right;">Due</td> <td id="due_amount"> {{ product.due_amount }} </td>
                                  </tr>  
                                  <tr style="font-size:13px;">    
                                     <td style="text-align:right;">Paid</td> <td> {{ product.total_price|sub:product.due_amount|add:product.discount }} </td>
@@ -97,31 +97,40 @@
                                 <b>Permanent Address</b> <a class="pull-right">{{ product.customer.permanent_address }}</a>
                             </li>
                         </ul>
-                        <form role="form" method="POST"> {% csrf_token %}
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <input class="btn btn-default pull-right" value="Next Installment Date">
-                                </span>
-                                <input class="form-control width100" type="date" value="{% now "Y-m-d" %}" name="next_installment_date" required>
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <label class="btn btn-default pull-right">Next Installment Amount</label>
-                                </span>
-                                <input class="form-control width100" type="number" value="{{ product.next_installment_amount }}" name="next_installment_amount" required>
-                            </div>
-                            <br>
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <label class="btn btn-default pull-right">Pay Amount</label>
-                                </span>
-                                <input class="form-control width100" name="installment_amount" value="{{ product.next_installment_amount }}" required>
-                                <span class="input-group-btn">
-                                    <input type="submit" class="btn btn-success pull-right" value="Payment">
-                                </span>
-                            </div>
-                        </form>
+                        {% if product.due_amount > 0 %}
+                            <form role="form" method="POST"> {% csrf_token %}
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <input class="btn btn-default pull-right" value="Next Installment Date" readonly>
+                                    </span>
+                                    <input class="form-control width100" type="date" {% if product.next_installment_date %} value="{{ product.next_installment_date|date:"Y-m-d" }}" {% else %} value="{% now "Y-m-d" %}" {% endif %} name="next_installment_date" required>
+                                </div>
+                                <br>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <input class="btn btn-default pull-right" value="Collection Date" readonly>
+                                    </span>
+                                    <input class="form-control width100" type="date" value="{% now "Y-m-d" %}" name="collection_date" required>
+                                </div>
+                                <br>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <label class="btn btn-default pull-right" readonly>Next Installment Amount</label>
+                                    </span>
+                                    <input class="form-control width100" type="number" id="next_pay_amount" value="{{ product.next_installment_amount }}" name="next_installment_amount" required>
+                                </div>
+                                <br>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <label class="btn btn-default pull-right">Pay Amount</label>
+                                    </span>
+                                    <input class="form-control width100" type="number" id="pay_amount" name="installment_amount" value="{{ product.next_installment_amount }}" required>
+                                    <span class="input-group-btn">
+                                        <input type="submit" class="btn btn-success pull-right" value="Payment">
+                                    </span>
+                                </div>
+                            </form>
+                        {% endif %}
                     </div>
                     
 				</div>
@@ -129,5 +138,21 @@
     	</div>
 	</section>
 </div>
-
+<script src="{% static 'showroom/admin/bower_components/jquery/dist/jquery.min.js' %}"></script>
+<script>
+    $('#pay_amount').change(function(){
+        if($(this).val() > $('#due_amount').html()){
+            alert("Current due amount is "+$('#due_amount').html());
+            $(this).val($('#next_pay_amount').val());
+            $(this).focus();
+        }
+    });
+    $('#next_pay_amount').change(function(){
+        if($(this).val() > $('#due_amount').html()){
+            alert("Current due amount is "+$('#due_amount').html());
+            $(this).val(parseFloat($('#due_amount').html()));
+            $(this).focus();
+        }
+    });
+</script>
 {% endblock %}
